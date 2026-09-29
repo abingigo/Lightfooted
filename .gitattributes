@@ -1,0 +1,3 @@
+*.prefab merge=unityyamlmerge
+*.unity merge=unityyamlmerge
+*.asset merge=unityyamlmerge
