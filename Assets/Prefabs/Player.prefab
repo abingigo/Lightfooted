@@ -170,7 +170,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &-7189678497009008597
 CircleCollider2D:
@@ -236,6 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
+  acceleration: 50
   jumpForce: 20
   groundMask:
     serializedVersion: 2
@@ -259,7 +260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameEndText
   EndY: -20
-  Tutorial: {fileID: 0}
+  text: {fileID: 0}
+  message: Game Over!
 --- !u!1 &8546619722245820698
 GameObject:
   m_ObjectHideFlags: 0

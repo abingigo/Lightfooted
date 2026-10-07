@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public float acceleration = 50f;
     public float jumpForce = 8f;
     public LayerMask groundMask;
     public Transform groundCheck;
@@ -16,10 +17,15 @@ public class PlayerController : MonoBehaviour
     float moveX;
     float moveY;
     bool dashReady = true;
+
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 10f;
     [SerializeField] private float dashDuration = 1f;
     [SerializeField] private float dashCooldown = 1f;
+
+    bool jumpQueued;
+    bool dashQueued;
+    Vector2 dashDirection;
 
     PlayerLightTracker playerLightTracker;
 
@@ -39,55 +45,88 @@ public class PlayerController : MonoBehaviour
         {
             moveY = 1;
         }
+
+        if (Input.GetButtonDown("Jump") && isGrounded && !isDashing)
+        {
+            jumpQueued = true;
+        }
+
         if (!Input.GetKey(KeyCode.LeftShift))
         {
             dashReady = true;
         }
+
         if (isDashing)
         {
             return;
         }
-        if(isGrounded == true){
+
+        if (isGrounded)
+        {
             isCoolDownReady = true;
         }
-        Vector2 v = rb.linearVelocity;
-        v.x = moveX * moveSpeed;
-        rb.linearVelocity = v;
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        if (Input.GetKey(KeyCode.LeftShift) && (moveX != 0 || moveY != 0) && dashReady && isCoolDownReady)
         {
-            v = rb.linearVelocity;
-            v.y = jumpForce;
-            rb.linearVelocity = v;
-            moveY = 1;
-        }
-        // getKey is always active when the leftshift is pressed, while getKeydown is active only at the frame when shift is pressed
-        if (Input.GetKey(KeyCode.LeftShift) && (moveX != 0 || moveY != 0) && (dashReady == true) && (isCoolDownReady == true))
-            {
-                dashReady = false;
-                isDashing = true;
-                //isCoolDownReady = false;
-                Vector2 dashDirection =  new Vector2(rb.linearVelocity.x * 2f, rb.linearVelocity.y).normalized;
-                rb.linearVelocity = dashDirection * dashSpeed;
+            dashReady = false;
+            isDashing = true;
 
-                Invoke(nameof(StopDash), dashDuration);
-                //you dont want players to cheat by keep dashing by when they are not grounded(they can fly by doing this trick)
-                if(isGrounded == false){// now they cant dash again unless they touched the grass.
-                    isCoolDownReady = false;
-                }
-                //Invoke(nameof(ResetCooldown), dashDuration + dashCooldown);
+            float dirX = rb.linearVelocity.x != 0f ? Mathf.Sign(rb.linearVelocity.x)
+                       : moveX != 0f ? Mathf.Sign(moveX)
+                       : 1f;
+            dashDirection = new Vector2(dirX, 0f);
+
+            dashQueued = true;
+
+            Invoke(nameof(StopDash), dashDuration);
+
+            if (!isGrounded)
+            {
+                isCoolDownReady = false;
             }
         }
-        private void StopDash()
-        {
-            isDashing = false;
-            playerLightTracker.UpdateCollision();
-        }
-        private void ResetCooldown()
-        {
-            isCoolDownReady = true;
-        }
-        
+    }
 
+    void FixedUpdate()
+    {
+        if (dashQueued)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(dashDirection * dashSpeed * rb.mass, ForceMode2D.Impulse);
+            dashQueued = false;
+        }
 
+        if (isDashing)
+        {
+            Vector2 v = rb.linearVelocity;
+            v.y = 0f;
+            rb.linearVelocity = v;
+            return;
+        }
+
+        float targetVelocityX = moveX * moveSpeed;
+        float velocityDiff = targetVelocityX - rb.linearVelocity.x;
+        rb.AddForce(new Vector2(velocityDiff * acceleration, 0f), ForceMode2D.Force);
+
+        if (jumpQueued)
+        {
+            Vector2 v = rb.linearVelocity;
+            v.y = 0f;
+            rb.linearVelocity = v;
+
+            rb.AddForce(Vector2.up * jumpForce * rb.mass, ForceMode2D.Impulse);
+            jumpQueued = false;
+        }
+    }
+
+    private void StopDash()
+    {
+        isDashing = false;
+        playerLightTracker.UpdateCollision();
+    }
+
+    private void ResetCooldown()
+    {
+        isCoolDownReady = true;
+    }
 }
