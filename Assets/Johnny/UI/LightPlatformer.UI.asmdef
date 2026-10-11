@@ -1,0 +1,6 @@
+{
+  "name": "LightPlatformer.UI",
+  "rootNamespace": "LightPlatformer.UI",
+  "references": ["Unity.ugui", "Unity.TextMeshPro"],
+  "autoReferenced": true
+}
