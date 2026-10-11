@@ -5,6 +5,7 @@ public class PlayerLightTracker : MonoBehaviour
 {
     public Collider2D collisionBox;
     public bool hasLantern = false; //to check if player has a lantern.
+    public bool hasThrowableLight = false;
     public string lightTag = "Light";
 
     readonly List<Collider2D> lightsInside = new List<Collider2D>();
@@ -40,7 +41,14 @@ public class PlayerLightTracker : MonoBehaviour
     {
         if (collisionBox == null) return;
 
-        collisionBox.enabled = hasLantern || lightsInside.Count > 0;
+        lightsInside.RemoveAll(light => light == null || !light.enabled || !light.gameObject.activeInHierarchy);
+        collisionBox.enabled = hasLantern || hasThrowableLight || lightsInside.Count > 0;
+    }
+
+    public void ForgetLight(Collider2D light)
+    {
+        lightsInside.Remove(light);
+        UpdateCollision();
     }
 
     public void DropLantern()
