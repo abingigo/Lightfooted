@@ -9,5 +9,6 @@ namespace Economy
         int GetBalance(CurrencyType currency);
         void Add(CurrencyType currency, int amount);
         bool TrySpend(CurrencyType currency, int amount);
+        void ResetBalances(CurrencyLifetime lifetime);
     }
 }
