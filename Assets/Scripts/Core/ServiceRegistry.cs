@@ -17,7 +17,7 @@ namespace Core
         {
             if (TryGet<T>(out var existing) && !ReferenceEquals(existing, service))
             {
-                Debug.LogWarning($"Services: {typeof(T).Name} already registered, rejecting duplicate.");
+                Debug.LogWarning($"Core: {typeof(T).Name} already registered, rejecting duplicate.");
                 return false;
             }  
             registry[typeof(T)] = service;
@@ -41,7 +41,7 @@ namespace Core
         public static T Get<T>() where T : class, IService
         {
             if (TryGet<T>(out var s)) return s;
-            Debug.LogError($"Services: no {typeof(T).Name} registered. Is its manager in the scene?");
+            Debug.LogError($"Core: no {typeof(T).Name} registered. Is its manager in the scene?");
             return null;
         }
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Collectables
 {
-    // Permanent Currency;
     public class CurrencyPickup : Collectable
     {
         [SerializeField] private CurrencyType currency;

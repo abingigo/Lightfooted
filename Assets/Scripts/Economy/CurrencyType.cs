@@ -8,7 +8,7 @@ namespace Economy
         PerLevel      // reset every time a level loads, including restarts
     }
     
-    [CreateAssetMenu(menuName = "Lightfooted/Economy/Currency  Type", fileName = "NewCurrencyType")]
+    [CreateAssetMenu(menuName = "Lightfooted/Economy/Currency Type", fileName = "NewCurrencyType")]
     public class CurrencyType : ScriptableObject
     {
         [SerializeField] private string displayName;
