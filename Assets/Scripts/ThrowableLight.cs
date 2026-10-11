@@ -54,6 +54,7 @@ public class ThrowableLight : MonoBehaviour
         transform.SetParent(null, true);
         transform.position = position;
         body.simulated = true;
+        GetComponent<IgnorePlayerCollision2D>()?.Apply();
         body.linearVelocity = Vector2.zero;
         body.angularVelocity = 0f;
         nextPickupTime = Time.time + pickupDelay;
