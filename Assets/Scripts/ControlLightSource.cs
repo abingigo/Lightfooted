@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class ControllableLight : MonoBehaviour
 {
@@ -6,8 +7,25 @@ public class ControllableLight : MonoBehaviour
 
     public float[] anglesClockwise = { 0f, -90f, 180f, 90f };
 
+    public Collider2D clickCollider;
+
+    public Light2D light2D;
+
+    public float selectedIntensityMultiplier = 1.5f;
+
     int currentIndex = 0;
     float targetAngle;
+    bool isSelected = false;
+    float normalIntensity = 1f;
+    Camera cam;
+
+    void Awake()
+    {
+        cam = Camera.main;
+        if (clickCollider == null) clickCollider = GetComponent<Collider2D>();
+        if (light2D == null) light2D = GetComponent<Light2D>();
+        if (light2D != null) normalIntensity = light2D.intensity;
+    }
 
     void Start()
     {
@@ -17,12 +35,9 @@ public class ControllableLight : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))    SetDirection(0);
-        else if (Input.GetKeyDown(KeyCode.RightArrow)) SetDirection(1);
-        else if (Input.GetKeyDown(KeyCode.DownArrow))  SetDirection(2);
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))  SetDirection(3);
+        HandleClickSelection();
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (isSelected && Input.GetKeyDown(KeyCode.F))
         {
             SetDirection((currentIndex + 1) % anglesClockwise.Length);
         }
@@ -30,6 +45,23 @@ public class ControllableLight : MonoBehaviour
         float currentAngle = transform.eulerAngles.z;
         float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, turnSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
+    }
+
+    void HandleClickSelection()
+    {
+        if (!Input.GetMouseButtonDown(0)) return;
+
+        Vector2 worldPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        bool clickedMe = clickCollider != null && clickCollider.OverlapPoint(worldPoint);
+        SetSelected(clickedMe);
+    }
+
+    void SetSelected(bool value)
+    {
+        isSelected = value;
+        if (light2D != null)
+            light2D.intensity = isSelected ? normalIntensity * selectedIntensityMultiplier : normalIntensity;
     }
 
     void SetDirection(int index)
