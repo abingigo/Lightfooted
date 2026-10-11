@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace System
+namespace Core
 {
     public abstract class Service<TService> : MonoBehaviour where TService : class, IService
     {
