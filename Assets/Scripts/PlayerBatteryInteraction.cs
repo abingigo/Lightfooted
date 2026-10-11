@@ -11,6 +11,7 @@ public class PlayerBatteryInteraction : MonoBehaviour
 
     void Update()
     {
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
         if (!Input.GetKeyDown(interactKey)) return;
 
         if (heldBattery != null)
