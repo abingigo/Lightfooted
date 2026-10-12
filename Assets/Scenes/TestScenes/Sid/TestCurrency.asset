@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 089034ccbdc4465a9cab07915bbe7793, type: 3}
-  m_Name: Coin
+  m_Name: TestCurrency
   m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyType
-  displayName: Coin
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  displayName: TestLevelCoin
+  icon: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   lifetime: 1
