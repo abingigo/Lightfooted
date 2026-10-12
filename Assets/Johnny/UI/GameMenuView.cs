@@ -98,7 +98,7 @@ namespace LightPlatformer.UI
             for (int i = 0; i < levels.Count; i++)
             {
                 var entry = levels[i];
-                var button = Button(content, (i + 1).ToString("00") + "    " + entry.Title, 296, 60, 0, 0, () => SelectLevel(entry));
+                var button = Button(content, i.ToString("00") + "    " + entry.Title, 296, 60, 0, 0, () => SelectLevel(entry));
                 button.gameObject.AddComponent<LayoutElement>().preferredHeight = 60;
                 button.gameObject.AddComponent<MenuFocusScroll>().Scroll = scroll;
                 levelButtons.Add(button);

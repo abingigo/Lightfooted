@@ -1,11 +1,8 @@
 using UnityEngine;
-using TMPro;
 
 public class GameEndText : MonoBehaviour
 {
-    public float EndY = -20f; 
-    public TMP_Text text;
-    public string message = "Game Over!";
+    public float EndY = -20f;
     bool hasEnded;
 
     void Update()
@@ -14,8 +11,6 @@ public class GameEndText : MonoBehaviour
         if (!hasEnded && transform.position.y < EndY)
         {
             hasEnded = true;
-            if (text != null) text.text = message;
-            Time.timeScale = 0f;
             LightPlatformer.UI.GameMenuController.NotifyGameOver();
         }
     }

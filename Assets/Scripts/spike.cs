@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using LightPlatformer.UI;
 
 public class spike : MonoBehaviour
 {
-    public TMP_Text text;
 
     SpriteRenderer sprite;
     Collider2D colli;
@@ -19,15 +18,13 @@ public class spike : MonoBehaviour
     void Update()
     {
         sprite.enabled = InLight();
-
     }
 
     void OnTriggerStay2D( Collider2D other)
     {
         if (!other.CompareTag("Player") || !InLight()) return;
 
-        text.text = "Game Over!";
-        Time.timeScale =  0f;
+        GameMenuController.NotifyGameOver();
     }
 
     bool InLight()
@@ -36,9 +33,6 @@ public class spike : MonoBehaviour
 
         foreach (Collider2D thing in touching)
         {
-
-
-
             if (thing.CompareTag("Light")) return true;
         }
 
