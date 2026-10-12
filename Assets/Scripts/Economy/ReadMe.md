@@ -1,0 +1,2 @@
+﻿Although this is the same infrastructure used in "Shop" resources, we are NOT using this to make a shop within this semester project.
+Used to track persistent/semi-persistent "currency" between scenes.
