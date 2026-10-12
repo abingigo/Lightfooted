@@ -37,6 +37,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
+        {
+            ClearQueuedInput();
+            return;
+        }
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
         moveX = Input.GetAxisRaw("Horizontal");
@@ -89,6 +94,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
+        {
+            ClearQueuedInput();
+            return;
+        }
         if (dashQueued)
         {
             rb.linearVelocity = Vector2.zero;
@@ -116,6 +126,18 @@ public class PlayerController : MonoBehaviour
 
             rb.AddForce(Vector2.up * jumpForce * rb.mass, ForceMode2D.Impulse);
             jumpQueued = false;
+        }
+    }
+
+    void ClearQueuedInput()
+    {
+        moveX = moveY = 0;
+        jumpQueued = false;
+        if (dashQueued)
+        {
+            dashQueued = false;
+            isDashing = false;
+            CancelInvoke(nameof(StopDash));
         }
     }
 
