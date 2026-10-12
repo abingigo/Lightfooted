@@ -27,6 +27,7 @@ public class PlayerThrowableLight : MonoBehaviour
 
     void Update()
     {
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
         float horizontal = Input.GetAxisRaw("Horizontal");
         if (horizontal != 0f) facing = Mathf.Sign(horizontal);
 
