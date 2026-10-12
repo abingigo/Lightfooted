@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9445b008cac40a791a74c44d237f102, type: 3}
+  m_Name: TestCoinCollectable
+  m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyCollectDef
+  prefabOverride: {fileID: 8697452476220211831, guid: 3924c25cc97cfc5498131e8c45fe829d, type: 3}
+  sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  currency: {fileID: 11400000, guid: 6d661e2e2a1fc2e4f9d16c646556accf, type: 2}
+  amount: 5
