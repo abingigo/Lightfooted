@@ -9,9 +9,6 @@ public class flashlightDirection : MonoBehaviour
     {
         light2D = GetComponent<Light2D>();
         light2D.enabled = false;
-
-
-
     }
 
     void Update()
