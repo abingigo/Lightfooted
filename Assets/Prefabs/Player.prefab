@@ -427,6 +427,6 @@ MonoBehaviour:
   pickupKey: 101
   throwKey: 113
   throwOffset: 1.3
-  throwImpulse: 9
-  upwardImpulse: 3
+  throwImpulse: 6
+  upwardImpulse: 2
   pickupDelay: 0.35
