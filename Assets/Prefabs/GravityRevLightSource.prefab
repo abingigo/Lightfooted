@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3345910006353317015}
-  - component: {fileID: 5074752332158347858}
   - component: {fileID: 3972260071660902138}
   - component: {fileID: 1274627030288231001}
   - component: {fileID: 6092834489741964226}
@@ -35,22 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
---- !u!114 &5074752332158347858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735426721353825898}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ae50c1f57f7e42c09ab6b5b02008b38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovingLight
-  startingPosition: {x: 0, y: 0, z: 0}
-  endingPosition: {x: 15, y: 0, z: 0}
-  d: 1
-  speed: 2
 --- !u!114 &3972260071660902138
 MonoBehaviour:
   m_ObjectHideFlags: 0
