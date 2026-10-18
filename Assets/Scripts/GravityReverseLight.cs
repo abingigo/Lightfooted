@@ -4,6 +4,7 @@ public class GravityReverseLight : MonoBehaviour
 {
     Rigidbody2D playerRb;
     float normalGravity;
+    public float gravityScale = 3f;
 
     void Start()
     {
@@ -16,7 +17,7 @@ public class GravityReverseLight : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        playerRb.gravityScale = -normalGravity / 3f;
+        playerRb.gravityScale = -normalGravity / gravityScale;
     }
 
     void OnTriggerExit2D(Collider2D other)
