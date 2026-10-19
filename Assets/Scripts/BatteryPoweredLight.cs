@@ -69,7 +69,6 @@ public class BatteryPoweredLight : MonoBehaviour
         if (light2D != null) light2D.enabled = powered;
         if (lightRange != null) lightRange.enabled = powered;
 
-        // A disabled trigger may not deliver OnTriggerExit2D to the player.
         if (wasPowered && !powered && lightRange != null)
         {
             foreach (PlayerLightTracker tracker in FindObjectsByType<PlayerLightTracker>(FindObjectsSortMode.None))

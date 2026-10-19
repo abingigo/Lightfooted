@@ -16,6 +16,7 @@ public class ControllableLight : MonoBehaviour
     int currentIndex = 0;
     float targetAngle;
     bool isSelected = false;
+    public bool IsSelected => isSelected;
     float normalIntensity = 1f;
     Camera cam;
 
@@ -35,6 +36,7 @@ public class ControllableLight : MonoBehaviour
 
     void Update()
     {
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
         HandleClickSelection();
 
         if (isSelected && Input.GetKeyDown(KeyCode.F))
@@ -50,6 +52,11 @@ public class ControllableLight : MonoBehaviour
     void HandleClickSelection()
     {
         if (!Input.GetMouseButtonDown(0)) return;
+
+        if (UnityEngine.EventSystems.EventSystem.current != null &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        if (cam == null) cam = Camera.main;
+        if (cam == null) return;
 
         Vector2 worldPoint = cam.ScreenToWorldPoint(Input.mousePosition);
 

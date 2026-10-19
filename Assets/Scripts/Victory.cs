@@ -1,18 +1,16 @@
 using UnityEngine;
-using TMPro;
 
 public class Victory : MonoBehaviour
 {
+    bool hasEnded;
 
-    public TMP_Text text;
-    public string message = "You win!";
-
-    public void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
+        if (!hasEnded && other.CompareTag("Player"))
         {
-            text.text = message;
-            Time.timeScale = 0f;
+            hasEnded = true;
+            LightPlatformer.UI.GameMenuController.NotifyVictory();
         }
     }
 }

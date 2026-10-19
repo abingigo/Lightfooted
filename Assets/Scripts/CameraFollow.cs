@@ -38,10 +38,7 @@ public class CameraFollow : MonoBehaviour
         {
             smoothed.y = ClampAxis(smoothed.y, minY, maxY, camHalfHeight);
         }
-        else
-        {
-            smoothed.y = transform.position.y;
-        }
+
 
         smoothed.z = offset.z;
 

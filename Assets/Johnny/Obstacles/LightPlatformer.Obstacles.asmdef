@@ -1,0 +1,5 @@
+{
+  "name": "LightPlatformer.Obstacles",
+  "references": ["LightPlatformer.UI", "Unity.TextMeshPro"],
+  "autoReferenced": true
+}
