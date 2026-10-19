@@ -1823,6 +1823,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5774244484081601734, guid: 128df68fa0040488a89af29aaae20e56, type: 3}
   m_PrefabInstance: {fileID: 917959603}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &234092739 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5924545126893405038, guid: 22aceeadb5c5e434e820e4b8fb67e251, type: 3}
+  m_PrefabInstance: {fileID: 1766942612}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &238376255
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5274,6 +5279,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 345db5337076a49d5a57e0ddf9f80c8a, type: 3}
+--- !u!1001 &656592816
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2326585383923578, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_Name
+      value: flashlightobj
+      objectReference: {fileID: 0}
+    - target: {fileID: 3014305397340689196, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: Gameobjflashlight
+      value: 
+      objectReference: {fileID: 234092739}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 29.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744691618809069474, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8d6dafcb028014409a4c3669d0256bd6, type: 3}
 --- !u!4 &661782318 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7648053290522019562, guid: 345db5337076a49d5a57e0ddf9f80c8a, type: 3}
@@ -15183,11 +15249,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6202738342181332388, guid: 22aceeadb5c5e434e820e4b8fb67e251, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.83
+      value: -15.04
       objectReference: {fileID: 0}
     - target: {fileID: 6202738342181332388, guid: 22aceeadb5c5e434e820e4b8fb67e251, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.2
+      value: 23.07
       objectReference: {fileID: 0}
     - target: {fileID: 6202738342181332388, guid: 22aceeadb5c5e434e820e4b8fb67e251, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18535,3 +18601,4 @@ SceneRoots:
   - {fileID: 618516208}
   - {fileID: 719916022}
   - {fileID: 1060977277}
+  - {fileID: 656592816}
