@@ -266,43 +266,6 @@ MonoBehaviour:
   EndY: -20
   text: {fileID: 0}
   message: Game Over!
---- !u!114 &900000000000000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251545105464418845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 435b92b373d14f18b3690bf910a5fb47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerBatteryInteraction
-  interactKey: 114
-  interactRadius: 1.5
-  batteryHoldPoint: {fileID: 0}
-  holdOffset: {x: -0.5, y: 0.25, z: 0}
---- !u!114 &900000000000000005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251545105464418845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 476193c684cd4e69afff765b13b3b19c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerThrowableLight
-  holdPoint: {fileID: 0}
-  holdOffset: {x: 0.6, y: 0.3, z: 0}
-  pickupRadius: 1.25
-  pickupKey: 101
-  throwKey: 113
-  throwOffset: 1.3
-  throwImpulse: 9
-  upwardImpulse: 3
-  pickupDelay: 0.35
 --- !u!114 &7325150602004068245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,3 +407,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanternTimer
   duration: 5
+--- !u!114 &900000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 435b92b373d14f18b3690bf910a5fb47, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBatteryInteraction
+  interactKey: 114
+  interactRadius: 1.5
+  batteryHoldPoint: {fileID: 0}
+  holdOffset: {x: -0.5, y: 0.25, z: 0}
+--- !u!114 &900000000000000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 476193c684cd4e69afff765b13b3b19c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerThrowableLight
+  holdPoint: {fileID: 0}
+  holdOffset: {x: 0.6, y: 0.3, z: 0}
+  pickupRadius: 1.25
+  pickupKey: 101
+  throwKey: 113
+  throwOffset: 1.3
+  throwImpulse: 6
+  upwardImpulse: 2
+  pickupDelay: 0.35
