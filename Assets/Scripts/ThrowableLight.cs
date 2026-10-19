@@ -9,6 +9,8 @@ public class ThrowableLight : MonoBehaviour
     float nextPickupTime;
 
     public bool CanPickUp => body != null && body.simulated && Time.time >= nextPickupTime;
+    public bool IsCarried => body != null && !body.simulated;
+    public bool HasBeenThrown { get; private set; }
     public Collider2D LightRange => lightRange;
 
     void Awake()
@@ -51,6 +53,7 @@ public class ThrowableLight : MonoBehaviour
 
     public void Throw(Vector2 position, Vector2 impulse, float pickupDelay)
     {
+        HasBeenThrown = true;
         transform.SetParent(null, true);
         transform.position = position;
         body.simulated = true;

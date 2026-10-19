@@ -12,8 +12,8 @@ public class PlayerThrowableLight : MonoBehaviour
 
     [Header("Throw")]
     [SerializeField] float throwOffset = 1.3f;
-    [SerializeField] float throwImpulse = 9f;
-    [SerializeField] float upwardImpulse = 3f;
+    [SerializeField] float throwImpulse = 6f;
+    [SerializeField] float upwardImpulse = 2f;
     [SerializeField] float pickupDelay = 0.35f;
 
     PlayerLightTracker lightTracker;
