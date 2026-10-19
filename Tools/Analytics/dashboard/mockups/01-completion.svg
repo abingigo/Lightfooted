@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="260" viewBox="0 0 760 260" role="img" aria-label="Completion rate by level planning mockup">
+<rect width="760" height="260" rx="12" fill="#172532"/>
+<text x="30" y="32" fill="#edca87" font-family="sans-serif" font-size="13">PLANNING MOCKUP · ILLUSTRATIVE VALUES · NOT PLAYTEST RESULTS</text>
+<text x="30" y="70" fill="#e3edf1" font-family="sans-serif" font-size="25">Completion rate by level</text>
+<text x="30" y="120" fill="#e3edf1" font-family="sans-serif" font-size="15">Tutorial</text>
+<rect x="250" y="100" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="100" width="320.0" height="28" rx="3" fill="#a8ead0"/>
+<text x="668" y="120" fill="#e3edf1" font-family="sans-serif" font-size="15">80%</text>
+<text x="30" y="175" fill="#e3edf1" font-family="sans-serif" font-size="15">Level 1</text>
+<rect x="250" y="155" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="155" width="220.0" height="28" rx="3" fill="#a8ead0"/>
+<text x="668" y="175" fill="#e3edf1" font-family="sans-serif" font-size="15">55%</text>
+</svg>
