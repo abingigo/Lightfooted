@@ -121,6 +121,11 @@ namespace LightPlatformer.UI
         void Finish(MenuState result)
         {
             if (State != MenuState.Playing) return;
+
+            if (result == MenuState.GameOver)
+            {
+                CheckpointProgress.deathTimes++;//death time counter here
+            }
             Time.timeScale = 0f;
             SetState(result);
         }
@@ -131,6 +136,11 @@ namespace LightPlatformer.UI
             return LoadLevel(SceneManager.GetActiveScene().path);
         }
 
+        public bool RestartFromBeginning()
+        {
+            CheckpointProgress.reachedCheckpoint = false;
+            return Restart();
+        }
         public bool LoadLevel(string path)
         {
             if (IsLoading) return false;
