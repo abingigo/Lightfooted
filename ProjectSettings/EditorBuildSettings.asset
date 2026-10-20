@@ -14,15 +14,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TutorialLevel.unity
     guid: 6f0945330b69a44c8ac3951d5d6600e6
+  - enabled: 1
+    path: Assets/Scenes/LightTutorialLevel.unity
+    guid: f3d1ce9cc6704a94a65878c3d1ee09ff
   - enabled: 0
     path: Assets/Scenes/Johnny/ObstacleLab.unity
     guid: 8b29694b480121547a935ad0546484d4
   - enabled: 0
     path: Assets/Scenes/Johnny/LightPlatformLab.unity
     guid: 2d3772ed12f8fbe4c9ec333daf1a7d79
-  - enabled: 1
-    path: Assets/Scenes/Level 1.unity
-    guid: afa45e118dd6342ef99dfc8d412de220
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
