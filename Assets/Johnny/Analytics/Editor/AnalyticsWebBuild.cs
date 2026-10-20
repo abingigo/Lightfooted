@@ -13,7 +13,7 @@ public static class AnalyticsWebBuild
 
     static void Build(bool qa)
     {
-        string output = qa ? "tmp/DownloadAnalyticsReview/qa/play" : "tmp/DownloadAnalyticsReview/alpha/play";
+        string output = qa ? "tmp/FirebaseAnalyticsReview/qa/play" : "tmp/FirebaseAnalyticsReview/alpha/play";
         Directory.CreateDirectory(output);
         var scenes = EditorBuildSettings.scenes.Where(item => item.enabled).Select(item => item.path).ToList();
         if (qa) { scenes.Remove(AnalyticsLabSetup.ScenePath); scenes.Insert(0, AnalyticsLabSetup.ScenePath); }
@@ -23,15 +23,17 @@ public static class AnalyticsWebBuild
         bool fallback = PlayerSettings.WebGL.decompressionFallback;
         try
         {
-            PlayerSettings.bundleVersion = qa ? "alpha-2026-10-20-qa" : "alpha-2026-10-20";
+            PlayerSettings.bundleVersion = qa ? "alpha-2026-10-20-firebase-qa" : "alpha-2026-10-20-firebase";
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
             PlayerSettings.WebGL.decompressionFallback = true;
             var report = BuildPipeline.BuildPlayer(scenes.ToArray(), output, BuildTarget.WebGL, qa ? BuildOptions.Development : BuildOptions.None);
             if (report.summary.result != BuildResult.Succeeded) throw new Exception("WebGL build failed: " + report.summary.result);
-            string page = Path.Combine(output, "index.html");
-            string html = File.ReadAllText(page);
-            html = html.Replace("<body>", "<body><p style=\"margin:10px;text-align:center;font:14px system-ui\">Lightfooted Alpha · Download playtest data below the game. <a href=\"StreamingAssets/playtest-graphs.html\" target=\"_blank\" rel=\"noopener\">Open playtest graphs</a></p>");
-            File.WriteAllText(page, html);
+            if (qa)
+            {
+                string page = Path.Combine(output, "index.html");
+                string capture = File.ReadAllText("Tools/Analytics/firebase_capture.js");
+                File.WriteAllText(page, File.ReadAllText(page).Replace("</head>", "<script>" + capture + "</script></head>"));
+            }
             Debug.Log("ANALYTICS_WEBGL_BUILD_SUCCEEDED " + output + " " + report.summary.totalSize);
         }
         finally

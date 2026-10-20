@@ -39,7 +39,11 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Bootstrap()
     {
+#if UNITY_EDITOR
+            // Keep the old collector available for its opt-in tests only.
+            if (Environment.GetEnvironmentVariable("LIGHTFOOTED_LEGACY_ANALYTICS") != "1") return;
         if (Instance == null) new GameObject("Analytics service").AddComponent<AnalyticsService>();
+#endif
     }
 
     protected override void Awake()

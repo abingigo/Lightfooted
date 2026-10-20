@@ -25,6 +25,21 @@ public class AnalyticsIntegrationTests
     static object Service => ServiceType.GetProperty("Instance").GetValue(null);
     static AttemptRecorder Recorder => (AttemptRecorder)ServiceType.GetProperty("Recorder").GetValue(Service);
     static bool Reach(string id) => (bool)ServiceType.GetMethod("ReachCheckpoint").Invoke(Service, new object[] { id });
+
+    [UnitySetUp]
+    public IEnumerator EnableLegacyCollectorForThisFixture()
+    {
+        if (Service == null) new GameObject("Legacy analytics test service").AddComponent(ServiceType);
+        yield return null;
+    }
+
+    [UnityTearDown]
+    public IEnumerator RemoveLegacyCollectorAfterThisFixture()
+    {
+        if (Service is Component component) UnityEngine.Object.Destroy(component.gameObject);
+        yield return null;
+    }
+
     static IEnumerator Open(string path)
     {
         Time.timeScale = 1;

@@ -1,6 +1,6 @@
-# Host the analytics collector
+# Old collector setup (backup)
 
-Use [the local guide](../../../WEBGL_ANALYTICS_GUIDE.md) first. Public playtests need an HTTPS collector with persistent storage. GitHub Pages serves the game only.
+The current game uses the team's Firebase / Google Analytics setup. See [the short guide](../../../WEBGL_ANALYTICS_GUIDE.md). These server steps are only for the earlier collector if we decide to use it again.
 
 ## Set up the server
 
