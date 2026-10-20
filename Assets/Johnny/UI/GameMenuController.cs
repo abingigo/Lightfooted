@@ -112,13 +112,13 @@ namespace LightPlatformer.UI
 
         public static void NotifyGameOver()
         {
-            WebAnalytics.Track("level_failed", ("level", SceneManager.GetActiveScene()));
+            WebAnalytics.Track("level_failed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.GameOver);
         }
 
         public static void NotifyVictory()
         {
-            WebAnalytics.Track("level_completed", ("level", SceneManager.GetActiveScene()));
+            WebAnalytics.Track("level_completed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.Victory);
         }
 
