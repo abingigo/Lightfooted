@@ -19,7 +19,7 @@ class WebConfigurationTests(unittest.TestCase):
 
     def test_https_configuration_is_public_data_without_secrets(self):
         configure(self.root, "https://analytics.example/api/events", "alpha-2026")
-        self.assertEqual(json.loads(self.config.read_text()), dict(endpoint="https://analytics.example/api/events", dataset="alpha-2026"))
+        self.assertEqual(json.loads(self.config.read_text()), dict(mode="server", endpoint="https://analytics.example/api/events", dataset="alpha-2026"))
         self.assertIn('href="https://analytics.example/analytics/"', (self.root / "index.html").read_text())
 
     def test_loopback_http_is_allowed_for_review(self):
