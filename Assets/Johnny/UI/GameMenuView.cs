@@ -63,8 +63,7 @@ namespace LightPlatformer.UI
             var shell = Box(canvas, "Level selection", 880, 520, 0, 0);
             mainContent = shell.gameObject;
             Text(shell, "LIGHTFOOTED", 14, Accent, 0, 242, 864, 24);
-            Text(shell, "Choose your next step", 34, Color.white, 0, 204, 864, 48);
-            Text(shell, "Find your way through light and darkness.", 16, Muted, 0, 166, 864, 30);
+            Text(shell, "Stay in the light or fall off the platform", 34, Color.white, 0, 204, 864, 48);
             var listPanel = Box(shell, "Levels", 336, 326, -264, -32, Panel);
             Text(listPanel, "LEVELS", 13, Muted, 0, 139, 296, 24);
             var scrollRoot = Box(listPanel, "Level list", 304, 232, 0, 0);
@@ -86,7 +85,7 @@ namespace LightPlatformer.UI
             Text(detail, "YOUR NEXT CHALLENGE", 13, Accent, 0, 131, 448, 24);
             levelTitle = Text(detail, "", 32, Color.white, 0, 89, 448, 46);
             levelDescription = Text(detail, "", 18, Muted, 0, 28, 448, 68);
-            Text(detail, "Move  A / D     Jump  Space\nDash  Shift     Click a light, then F", 15, Muted, 0, -48, 448, 48);
+            Text(detail, "", 15, Muted, 0, -48, 448, 48);
             playButton = Button(detail, "Play", 448, 52, 0, -112, () =>
             {
                 if (selected != null) controller.LoadLevel(selected.ScenePath);
