@@ -1,14 +1,16 @@
 using UnityEngine;
-using LightPlatformer.UI;
+using LightPlatformer.Obstacles;
 
-public class fatalspike : MonoBehaviour
+public class fatalSpike : MonoBehaviour
 {
-
-    void OnTriggerEnter2D(Collider2D other)
+    Collider2D col;
+    void Awake()
     {
-        if (!other.CompareTag("Player")|| other.isTrigger) return; //use this for now ig lol
-        
+        col =  GetComponent<Collider2D>();
+    }
 
-        GameMenuController.NotifyGameOver();
+    void OnTriggerStay2D (Collider2D other)
+    {
+        HazardContact.Hurt(other, col);
     }
 }
