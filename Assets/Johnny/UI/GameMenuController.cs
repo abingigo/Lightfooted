@@ -19,6 +19,7 @@ namespace LightPlatformer.UI
         public string ErrorMessage { get; private set; }
         public event Action ViewChanged;
         public event Action<float> LoadingProgress;
+        public event Action<string> SceneLoadRequested;
         GameMenuView view;
         int inputResumeFrame;
 
@@ -47,6 +48,7 @@ namespace LightPlatformer.UI
             DontDestroyOnLoad(gameObject);
             view = gameObject.AddComponent<GameMenuView>();
             SceneManager.sceneLoaded += SceneLoaded;
+            WebAnalytics.SetConsent(true);
         }
 
         void OnDestroy()
@@ -110,17 +112,24 @@ namespace LightPlatformer.UI
 
         public static void NotifyGameOver()
         {
+            WebAnalytics.Track("level_failed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.GameOver);
         }
 
         public static void NotifyVictory()
         {
+            WebAnalytics.Track("level_completed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.Victory);
         }
 
         void Finish(MenuState result)
         {
             if (State != MenuState.Playing) return;
+
+            if (result == MenuState.GameOver)
+            {
+                CheckpointProgress.deathTimes++;//death time counter here
+            }
             Time.timeScale = 0f;
             SetState(result);
         }
@@ -131,6 +140,11 @@ namespace LightPlatformer.UI
             return LoadLevel(SceneManager.GetActiveScene().path);
         }
 
+        public bool RestartFromBeginning()
+        {
+            CheckpointProgress.reachedCheckpoint = false;
+            return Restart();
+        }
         public bool LoadLevel(string path)
         {
             if (IsLoading) return false;
@@ -170,6 +184,7 @@ namespace LightPlatformer.UI
         IEnumerator Load(string path)
         {
             ErrorMessage = null;
+            SceneLoadRequested?.Invoke(path);
             SetState(MenuState.Loading);
             // Unpause before loading so the restarted level has a running clock.
             Time.timeScale = 1f;

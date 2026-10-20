@@ -42,7 +42,7 @@ public class PlayerLightTracker : MonoBehaviour
         if (collisionBox == null) return;
 
         lightsInside.RemoveAll(light => light == null || !light.enabled || !light.gameObject.activeInHierarchy);
-        collisionBox.enabled = hasLantern || hasThrowableLight || lightsInside.Count > 0;
+        collisionBox.enabled = hasLantern || lightsInside.Count > 0;
     }
 
     public void ForgetLight(Collider2D light)

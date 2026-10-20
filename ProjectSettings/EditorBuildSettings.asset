@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TutorialLevel.unity
     guid: 6f0945330b69a44c8ac3951d5d6600e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LightTutorialLevel.unity
     guid: f3d1ce9cc6704a94a65878c3d1ee09ff
   - enabled: 0
@@ -23,6 +23,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Johnny/LightPlatformLab.unity
     guid: 2d3772ed12f8fbe4c9ec333daf1a7d79
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: d09412801e1314ed6994fcade8fcdced
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: d3ca7095d05594062a8fd0f3f050dec7
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: afa45e118dd6342ef99dfc8d412de220
+  - enabled: 0
+    path: Assets/Scenes/Johnny/AnalyticsLab.unity
+    guid: e34d249a23b1ffe44ac1436a31029824
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

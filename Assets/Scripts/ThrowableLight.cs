@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class ThrowableLight : MonoBehaviour
@@ -12,10 +13,14 @@ public class ThrowableLight : MonoBehaviour
     public bool IsCarried => body != null && !body.simulated;
     public bool HasBeenThrown { get; private set; }
     public Collider2D LightRange => lightRange;
+    Light2D light;
+
+    public PlayerLightTracker playerLightTracker;
 
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
+        light = GetComponent<Light2D>();
 
         // The root is a physical object; only its child trigger counts as light.
         gameObject.tag = "Untagged";
@@ -49,6 +54,9 @@ public class ThrowableLight : MonoBehaviour
         body.simulated = false;
         transform.SetParent(holdPoint, true);
         transform.position = holdPoint.position + fallbackOffset;
+        light.enabled = false;
+        lightRange.enabled = false;
+        playerLightTracker.UpdateCollision();
     }
 
     public void Throw(Vector2 position, Vector2 impulse, float pickupDelay)
@@ -62,5 +70,8 @@ public class ThrowableLight : MonoBehaviour
         body.angularVelocity = 0f;
         nextPickupTime = Time.time + pickupDelay;
         body.AddForce(impulse, ForceMode2D.Impulse);
+        light.enabled = true;
+        lightRange.enabled = true;
+        playerLightTracker.UpdateCollision();
     }
 }
