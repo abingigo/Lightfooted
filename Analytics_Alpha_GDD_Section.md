@@ -1,73 +1,75 @@
 # Analytics for Alpha
 
-Draft for the shared GDD. The images show graph layouts, not playtest results. The hypotheses below still need real playtest data. Compare the same build and show sample counts.
+Draft for the shared GDD. These four plans use the team's Firebase / Google Analytics approach. Mockup values are examples, not playtest findings. Compare the same build and show the number of attempts.
 
 ## 1. Level completion rate
 
-**Measure:** completed attempts divided by all started attempts, per level. Restarting starts another attempt. Unfinished runs stay in the denominator.
+**Measure:** `level_completed` count / `level_started` count x 100, per level. A retry starts a new attempt. Unfinished runs stay in the denominator. Attempts are not unique players.
 
-**Why:** shows which levels players can finish and where teaching or difficulty needs review.
+**Why:** helps us find levels players cannot finish.
 
-**Read it:** a low rate flags a level to watch. Check deaths, progress, and player feedback to find the cause. Attempts are not unique players.
+**Read it:** a low rate flags a level to watch. Check failures, restarts, and player feedback before deciding what caused it.
 
-**Hypothesis:** after 20 started attempts on the same build, tutorial completion will be at least 70%.
+**Hypothesis:** after 20 starts on the same build, tutorial completion will be at least 70%.
 
-**Graph:** one bar per level, with completed/started counts and percentage.
+**Graph:** bars by level, with completed/started counts and percentages.
 
-![Planning example: completion rate](Tools/Analytics/dashboard/mockups/01-completion.svg)
+![Planning example: completion](Tools/Analytics/dashboard/mockups/01-completion.svg)
 
-## 2. Active completion time
+## 2. Active completion time (new)
 
-**Measure:** median active seconds for completed attempts, per level. Exclude pauses, loading, menus, and time without game focus. Show no value if nobody finishes.
+**Measure:** average `active_seconds` on `level_completed`, per level. Sum those seconds and divide by completed attempts. Exclude pauses, loading, menus, and background time. Failed attempts have no completion time. Show no value if there are no completions.
 
-**Why:** helps check how long successful runs take. The median limits the effect of unusually long runs.
+**Why:** helps us check whether successful runs take longer than expected.
 
-**Read it:** long times can mean a good puzzle or unclear instructions. Short times can mean mastery or a shortcut. Check completion rate and playtest notes too; failed runs are excluded here.
+**Read it:** a long time could mean an engaging puzzle or unclear instructions. Check player feedback. Averages can be affected by unusually long runs; this is not a median.
 
-**Hypothesis:** after 10 completions per level on the same build, Level 1's median time will exceed the tutorial's.
+**Hypothesis:** after 10 completions per level on the same build, Level 1's average active time will exceed the tutorial's.
 
-**Graph:** seconds per level, with the number of completed attempts.
+**Graph:** average seconds per level with completion counts.
 
-![Planning example: active time](Tools/Analytics/dashboard/mockups/02-duration.svg)
+![Planning example: active completion time](Tools/Analytics/dashboard/mockups/05-firebase-duration.svg)
 
-## 3. Checkpoint reach rate
+## 3. Manual restart rate (new)
 
-**Measure:** attempts reaching each progress marker divided by starts in that level. Count each marker once per attempt, using player body contact. These markers do not change respawn.
+**Measure:** `level_restarted` count / `level_started` count x 100, per level. Count only a restart chosen while the run is unfinished, including from pause. A retry after death or victory is a new start, not a manual abandon. Leaving for the menu is not a restart.
 
-**Why:** helps find the section where players stop making progress.
+**Why:** helps find puzzles where players reset their setup or feel stuck.
 
-**Read it:** compare markers in route order. Check alternate paths and backtracking before treating a drop as a difficulty problem. Only observed markers appear; a missing marker is not a measured zero.
+**Read it:** compare restart rates with failures and feedback. A reset can also be practice; it does not prove a design problem.
 
-**Hypothesis:** after 20 starts in a marked level, the marker after its first light puzzle will have a reach rate at least 10 percentage points below the marker before it.
+**Hypothesis:** after 20 starts per level on the same build, Level 1's restart rate will be at least 10 percentage points higher than the tutorial's.
 
-**Graph:** percentage bars in route order, with arrival counts. The example names are planned marker positions.
+**Graph:** restart percentages by level, with restart/start counts.
 
-![Planning example: progress markers](Tools/Analytics/dashboard/mockups/03-checkpoints.svg)
+![Planning example: restarts](Tools/Analytics/dashboard/mockups/06-firebase-restarts.svg)
 
-## 4. Death rate by level
+## 4. Failed attempt rate
 
-**Measure:** attempts ending in Game Over divided by all starts. Show manual restart rate separately. Quits, leaving, and unfinished runs are not deaths.
+**Measure:** `level_failed` count / `level_started` count x 100, per level. This is Game Over, not every checkpoint respawn or every falling death. Repeated outcome callbacks count once. Restarts and leaving are not failed attempts.
 
 **Why:** separates failed runs from players choosing to reset a puzzle.
 
-**Read it:** high deaths can mean challenge or unclear hazards. High restarts can mean practice or a setup that feels stuck. The data does not identify the hazard responsible.
+**Read it:** a high rate can mean challenge or unclear hazards. This metric does not identify which hazard caused the failure.
 
-**Hypothesis:** after 20 starts per level on the same build, Level 1's death rate will exceed the tutorial's by at least 10 percentage points.
+**Hypothesis:** after 20 starts per level on the same build, Level 1's failed-attempt rate will exceed the tutorial's by at least 10 percentage points.
 
-**Graph:** paired death/restart percentage bars with counts.
+**Graph:** failed-attempt percentages by level, with failure/start counts.
 
-![Planning example: deaths and restarts](Tools/Analytics/dashboard/mockups/04-failure.svg)
+![Planning example: failed attempts](Tools/Analytics/dashboard/mockups/07-firebase-failures.svg)
+
+The team's coin collection and falling-death metrics are separate additions. They should use the same level/build filters once those events are implemented.
 
 ## Method
 
-The game records starts, outcomes, timing, and first marker arrivals through its Core service and menu events. Each event has random session, attempt, and event IDs, a sequence number, level/build, platform, UTC time, and the measured values. It collects no names, emails, or device IDs.
+The Unity menu controller records one start per gameplay scene load. It updates a clock only while the game is playing and focused. On victory it sends `level_completed` with numeric `active_seconds`; on Game Over it sends `level_failed`. A restart during an unfinished run sends `level_restarted`, and the reloaded scene starts a fresh clock. Every event includes `level` and `build_version`. Completion time covers the successful attempt since its scene load, not time spent on earlier failed attempts. A checkpoint respawn within the same scene keeps the clock; reloading starts a new clock even if the player spawns at a saved checkpoint.
 
-WebGL saves recorded events in browser local storage. After a playtest, the player downloads a JSON file using the button below the game. The team imports one or more files into the bundled graph viewer. Files are processed on that computer, without a network upload or hosted database. Downloads keep the saved events; repeated files and overlapping downloads are deduplicated by event ID. Conflicting or malformed imports leave earlier results unchanged. Storage restrictions can leave events in memory only, so players should download before closing the page. Browser shutdown can leave a run unfinished.
+Events go through the existing `WebAnalytics.Track(...)` helper and the team's Google tag to Analytics. The game uses the teammate's existing collection setup. There is no local collector or manual JSON upload in the normal build. The earlier download/import version remains in source history as a backup.
 
-The viewer calculates the four metrics directly from the imported game events and provides build/level filters, sample counts, event details, and CSV exports. No mock observations are inserted into these graphs. The team must collect the downloaded files from testers through its agreed channel; this transfer is manual. Save original files and distinguish QA runs from peer data.
+The property owner must register the custom level/build dimensions and active-seconds metric, then make the graphs in Analytics. Completion, failure, and restart rates need matching event counts for the same level/build. Do not mix old events without the new parameters into those rates. Collection can be blocked by browser settings or extensions, so these rates describe received events, not every player who visited.
 
-Timing and outcomes work in the gameplay scenes without new scene objects. New markers currently exist only in AnalyticsLab; the team still needs to choose positions in its levels for metric 3.
+Local tests check timing, pause/background exclusion, restart handling, duplicate outcomes, and WebGL bridge payloads. A development-only capture page shows real game calls without sending test events to Google. It is QA evidence, not proof of server receipt or peer-playtest results. Live dashboard verification is pending property access and publication of the rebuilt game.
 
-## Before adding this to the GDD
+## Before submission
 
-After review and publication, add the Alpha playable URL, bundled graph-viewer link, source commit link, and a screenshot of real WebGL exports imported into the graphs. Document the manual download/import steps and browser validation results. Local test runs are QA evidence, not peer playtest findings. See [the setup guide](WEBGL_ANALYTICS_GUIDE.md).
+Add the published playable link, source commit, and screenshots from the actual Analytics property. The property owner still needs to confirm that the new parameters arrive and the graphs display them. Replace this draft's test status with the final build and playtest results after that check. See [the short guide](WEBGL_ANALYTICS_GUIDE.md).

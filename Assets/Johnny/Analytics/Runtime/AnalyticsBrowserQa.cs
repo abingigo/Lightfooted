@@ -21,7 +21,7 @@ public sealed class AnalyticsBrowserQa : MonoBehaviour
     }
     IEnumerator Start()
     {
-        while (AnalyticsService.Instance?.Queue == null || GameMenuController.Instance?.State != MenuState.Playing || !Application.isFocused)
+        while (GameMenuController.Instance?.State != MenuState.Playing || !Application.isFocused)
             yield return null;
         yield return null; yield return null;
         state = "Running actual movement and checkpoint physics";
@@ -58,8 +58,8 @@ public sealed class AnalyticsBrowserQa : MonoBehaviour
     {
         var style = new GUIStyle(GUI.skin.box) { fontSize = 18, alignment = TextAnchor.MiddleCenter };
         GUI.Box(new Rect(20, 50, 650, 40), "WEBGL QA · " + state, style);
-        if (done && AnalyticsService.Instance != null)
-            GUI.Box(new Rect(20, 95, 650, 40), "Pending: " + (AnalyticsService.Instance.Queue?.Count ?? -1) + " · " + AnalyticsService.Instance.DeliveryStatus, style);
+        if (done && GameMenuController.Instance != null)
+            GUI.Box(new Rect(20, 95, 650, 40), "Active seconds: " + GameMenuController.Instance.Metrics.ActiveSeconds.ToString("F3"), style);
     }
 }
 #endif

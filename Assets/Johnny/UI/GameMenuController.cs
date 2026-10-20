@@ -22,6 +22,10 @@ namespace LightPlatformer.UI
         public event Action<string> SceneLoadRequested;
         GameMenuView view;
         int inputResumeFrame;
+        public LevelPlaytestMetrics Metrics { get; private set; }
+        int metricsSceneHandle = int.MinValue;
+        double previousMetricTime;
+        bool metricWasActive, gameFocused, gameSuspended;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics() { Instance = null; }
@@ -47,6 +51,9 @@ namespace LightPlatformer.UI
             Instance = this;
             DontDestroyOnLoad(gameObject);
             view = gameObject.AddComponent<GameMenuView>();
+            Metrics = new LevelPlaytestMetrics(WebAnalytics.Track, Application.version);
+            previousMetricTime = Time.realtimeSinceStartupAsDouble;
+            gameFocused = Application.isFocused || Application.isBatchMode;
             SceneManager.sceneLoaded += SceneLoaded;
             WebAnalytics.SetConsent(true);
         }
@@ -64,6 +71,13 @@ namespace LightPlatformer.UI
             Time.timeScale = 1f;
             ErrorMessage = null;
             EnsureEventSystem();
+            AdvanceMetrics();
+            if (metricsSceneHandle != scene.handle)
+            {
+                metricsSceneHandle = scene.handle;
+                if (LevelCatalog.FromPaths(new[] { scene.path }).Count == 1) Metrics.Begin(scene.name);
+                else Metrics.Leave();
+            }
             SetState(scene.path == LevelCatalog.MenuPath ? MenuState.LevelSelect : MenuState.Playing);
         }
 
@@ -77,6 +91,7 @@ namespace LightPlatformer.UI
 
         void Update()
         {
+            AdvanceMetrics();
             bool escape = Input.GetKeyDown(KeyCode.Escape);
             if (escape && view.CloseControls()) return;
             if (escape || Input.GetKeyDown(KeyCode.P))
@@ -90,7 +105,10 @@ namespace LightPlatformer.UI
 
         void SetState(MenuState state)
         {
+            AdvanceMetrics();
             State = state;
+            if (state == MenuState.LevelSelect) Metrics.Leave();
+            SyncMetricActivity();
             if (state == MenuState.Playing) inputResumeFrame = Time.frameCount;
             view.Render(this);
             ViewChanged?.Invoke();
@@ -112,19 +130,20 @@ namespace LightPlatformer.UI
 
         public static void NotifyGameOver()
         {
-            WebAnalytics.Track("level_failed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.GameOver);
         }
 
         public static void NotifyVictory()
         {
-            WebAnalytics.Track("level_completed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.Victory);
         }
 
         void Finish(MenuState result)
         {
             if (State != MenuState.Playing) return;
+
+            AdvanceMetrics();
+            Metrics.Finish(result == MenuState.Victory);
 
             if (result == MenuState.GameOver)
             {
@@ -184,6 +203,10 @@ namespace LightPlatformer.UI
         IEnumerator Load(string path)
         {
             ErrorMessage = null;
+            AdvanceMetrics();
+            // Retrying after an outcome is a new attempt, not an abandoned run.
+            if (path == SceneManager.GetActiveScene().path) Metrics.Restart();
+            Metrics.Leave();
             SceneLoadRequested?.Invoke(path);
             SetState(MenuState.Loading);
             // Unpause before loading so the restarted level has a running clock.
@@ -210,6 +233,37 @@ namespace LightPlatformer.UI
                 LoadingProgress?.Invoke(Mathf.Clamp01(operation.progress / 0.9f));
                 yield return null;
             }
+        }
+
+        void SyncMetricActivity()
+        {
+            metricWasActive = Metrics.IsRunning && State == MenuState.Playing &&
+                Time.timeScale > 0f && gameFocused && !gameSuspended;
+        }
+
+        void AdvanceMetrics()
+        {
+            if (Metrics == null) return;
+            double now = Time.realtimeSinceStartupAsDouble;
+            Metrics.Advance(Math.Max(0, now - previousMetricTime), metricWasActive);
+            previousMetricTime = now;
+            SyncMetricActivity();
+        }
+
+        void OnApplicationFocus(bool focused)
+        {
+            if (Metrics == null) return;
+            AdvanceMetrics();
+            gameFocused = focused || Application.isBatchMode;
+            SyncMetricActivity();
+        }
+
+        void OnApplicationPause(bool paused)
+        {
+            if (Metrics == null) return;
+            AdvanceMetrics();
+            gameSuspended = paused;
+            SyncMetricActivity();
         }
     }
 }

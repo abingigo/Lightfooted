@@ -1,39 +1,39 @@
-# Playtest graphs
+# Analytics
 
-No server or Docker setup needed for this version. The game saves data in the browser, and we collect the downloaded files from testers.
+We're using the team's Firebase / Google Analytics setup. No Docker setup or player file uploads needed.
 
-## How to use it
+## What's added
 
-1. Play a level, then finish, die, restart, or go back to level select.
-2. Click **Download playtest data** below the game. Save the JSON file and send it to the team.
-3. Click **Open playtest graphs** and choose that file. You can import several testers' files together.
-4. Use the build and level filters to check the results. You can also download the tables as CSV files.
+- **Completion time:** `active_seconds` on `level_completed`. It counts active play during the successful attempt, without pauses, loading, menus, or background time. Earlier failed attempts aren't included.
+- **Manual restarts:** `level_restarted` when someone restarts an unfinished run. Trying again after Game Over or victory doesn't count as abandoning a run.
+- `level_started` gives us the number of attempts. All four events include `level` and `build_version`.
 
-The graphs show completion rate, active completion time, checkpoint reach rate, and deaths/restarts. Importing the same file again won't double-count it. Bad files won't replace results you've already imported.
+The coin and falling-death events are separate teammate work. The old download code stays as a backup, but it doesn't start or show buttons in normal builds.
 
-You can save the graph viewer as one HTML file and use it offline. Reimport the JSON files when you reopen it.
+## See the graphs
+
+The teammate with Analytics access needs to set this up once:
+
+1. In **Admin > Custom definitions**, add event dimensions for `level` and `build_version`.
+2. Add a custom metric for `active_seconds`, using seconds.
+3. In **Explore**, group by level and filter to the same build.
+4. For completion time, filter to `level_completed`. Use average active seconds, or total active seconds / completion count. The total alone isn't an average.
+5. For restart rate, use `level_restarted` count / `level_started` count x 100. No starts means no measured rate.
+
+Use Realtime or DebugView to check incoming events. Normal reports can take 24-48 hours. Older events won't have the new fields. We still need the property owner to confirm the live graphs.
 
 ## Build it
 
-Use Unity **6000.3.22f1** with Web Build Support installed.
+Use Unity **6000.3.22f1** with Web Build Support. **Tools > Johnny Analytics > Build Alpha WebGL** builds to `tmp/FirebaseAnalyticsReview/alpha/play/`. Rebuild and publish after review.
 
-**Tools > Johnny Analytics > Build Alpha WebGL** puts the build in `tmp/DownloadAnalyticsReview/alpha/play/`. Normal Unity WebGL builds include the download buttons and viewer too.
-
-We need to rebuild and publish the Alpha for testers to get these buttons. Changing the old build's config alone won't add them. Keep the earlier assignment builds.
-
-For a local check, run this from the project folder:
+For a local preview, run this from the project folder:
 
 ```powershell
-python -m http.server 8877 --bind 127.0.0.1 --directory tmp/DownloadAnalyticsReview
+python -m http.server 8878 --bind 127.0.0.1 --directory tmp/FirebaseAnalyticsReview
 ```
 
-Then open <http://127.0.0.1:8877/alpha/play/>. This just serves the build files. Testers using the published game don't need Python.
+Open <http://127.0.0.1:8878/alpha/play/>. Testers using the published game don't need Python.
 
-## A few things to know
+Developer check: `AnalyticsWebBuild.BuildQa` builds the QA version. Open `/qa/play/?analytics-qa=route&analytics-capture=1` to see actual game calls locally without sending QA data to Google. The capture page and route runner aren't included in release builds. Don't commit local test files or generated builds.
 
-- Download before closing the game. Private browsing or blocked storage can lose saved data.
-- Downloading keeps the saved events. During play, it also pauses the game without ending the run.
-- Unfinished attempts count in completion rates. Completion time only uses successful runs and excludes paused/background time.
-- Analytics markers are currently in AnalyticsLab. Team respawn checkpoints don't automatically record analytics. Deaths here mean Game Over, not every respawn.
-- Keep test runs separate from peer playtests. Don't commit player files or generated builds.
-- The four metric plans and mockups for the GDD are in [Analytics_Alpha_GDD_Section.md](Analytics_Alpha_GDD_Section.md).
+[The GDD draft](Analytics_Alpha_GDD_Section.md) has the four metric plans and mockups. [Google's parameter setup guide](https://firebase.google.com/docs/analytics/web/events) explains the custom definitions.
