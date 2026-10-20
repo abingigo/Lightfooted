@@ -186,7 +186,7 @@ SpriteRenderer:
   m_SortingOrder: -10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.08, g: 0.11, b: 0.2, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -673,6 +673,10 @@ PrefabInstance:
       value: Step 1
       objectReference: {fileID: 0}
     - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.4
       objectReference: {fileID: 0}
@@ -690,15 +694,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.r
-      value: 0.42
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.g
-      value: 0.5
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.b
-      value: 0.68
+      value: 0.13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -718,6 +722,10 @@ PrefabInstance:
       value: Step 2
       objectReference: {fileID: 0}
     - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.4
       objectReference: {fileID: 0}
@@ -735,15 +743,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.r
-      value: 0.42
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.g
-      value: 0.5
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.b
-      value: 0.68
+      value: 0.13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -763,6 +771,10 @@ PrefabInstance:
       value: Step 3
       objectReference: {fileID: 0}
     - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 1201326513547190208, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.4
       objectReference: {fileID: 0}
@@ -780,15 +792,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.r
-      value: 0.42
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.g
-      value: 0.5
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 8660555921130934181, guid: 9845b7b9a192840a1a17173869bc850f, type: 3}
       propertyPath: m_Color.b
-      value: 0.68
+      value: 0.13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -933,6 +945,7 @@ MonoBehaviour:
   cameraSmoothSpeed: 6
   goalPosition: {x: 4.3, y: 7.25}
   goalRadius: 0.85
+  hintFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
