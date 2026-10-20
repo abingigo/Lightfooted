@@ -8,9 +8,6 @@ namespace Lighting
         public static int Overlap(Collider2D shape, ContactFilter2D filter, List<Collider2D> results, float inset = 0f,
             Vector2 shift = default)
         {
-            if (inset <= 0f && shift == Vector2.zero && shape.enabled && shape.gameObject.activeInHierarchy)
-                return shape.Overlap(filter, results);
-
             var t = shape.transform;
             Vector2 center = (Vector2)t.TransformPoint(shape.offset) + shift;
             Vector2 scale = t.lossyScale;
@@ -29,6 +26,8 @@ namespace Lighting
                     return Physics2D.OverlapCircle(center,
                         Mathf.Max(0f, circle.radius * Mathf.Max(scale.x, scale.y) - inset), filter, results);
                 default:
+                    if (inset <= 0f && shift == Vector2.zero && shape.enabled && shape.gameObject.activeInHierarchy)
+                        return shape.Overlap(filter, results);
                     Debug.LogWarning($"ShapeQuery: a disabled or inset {shape.GetType().Name} isn't supported.", shape);
                     results.Clear();
                     return 0;

@@ -12,5 +12,6 @@ namespace Lighting
         void Unregister(LightExposure exposure);
 
         bool IsLit(Collider2D shape, Func<LightProfile, bool> filter = null);
+        bool TryGetEffect<T>(Collider2D shape, out T effect) where T : LightEffect;
     }
 }

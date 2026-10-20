@@ -91,6 +91,17 @@ namespace Lighting
                     return true;
             return false;
         }
+
+        public bool TryGetEffect<T>(Collider2D shape, out T effect) where T : LightEffect
+        {
+            effect = null;
+            if (!shape || ShapeQuery.Overlap(shape, lightFilter, hits) == 0) return false;
+            foreach (var hit in hits)
+                if (sourcesByArea.TryGetValue(hit, out var source) && source.Profile.TryGet(out effect))
+                    return true;
+            return false;
+        }
+
         protected override void OnDestroy()
         {
             sourcesByArea.Clear();

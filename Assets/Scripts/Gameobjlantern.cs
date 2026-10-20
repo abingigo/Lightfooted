@@ -20,11 +20,8 @@ public class LanternPickup : MonoBehaviour
         }
 
         var tracker = other.GetComponentInParent<PlayerLightTracker>();
-        if (tracker != null)
-        {
-            tracker.hasLantern = true;
-            tracker.UpdateCollision();
-        }
+        tracker.hasLantern = true;
+        tracker.UpdateCollision();
         platform.isTrigger = false;
         Destroy(gameObject);
     }

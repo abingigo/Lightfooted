@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afea8ac0a63ef54478b67ee16e041df9, type: 3}
+  m_Name: ReverseGravity
+  m_EditorClassIdentifier: Assembly-CSharp::Lighting.LightProfileAsset
+  profile:
+    illuminates: 1
+    effects:
+    - rid: 8425525071278506052
+  references:
+    version: 2
+    RefIds:
+    - rid: 8425525071278506052
+      type: {class: GravityEffect, ns: Lighting, asm: Assembly-CSharp}
+      data:
+        multiplier: -0.333
