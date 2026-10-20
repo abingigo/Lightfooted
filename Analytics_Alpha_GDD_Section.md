@@ -62,10 +62,12 @@ Draft for the shared GDD. The images show graph layouts, not playtest results. T
 
 The game records starts, outcomes, timing, and first marker arrivals through its Core service and menu events. Each event has random session, attempt, and event IDs, a sequence number, level/build, platform, UTC time, and the measured values. It collects no names, emails, or device IDs.
 
-WebGL saves pending events in browser local storage, then sends batches to the collector. SQLite stores unique events; retries do not add samples. Storage restrictions can leave events in memory only. Browser shutdown can leave a run unfinished. The dashboard queries database totals every five seconds, with level/build filters, counts, graphs, and CSV export.
+WebGL saves recorded events in browser local storage. After a playtest, the player downloads a JSON file using the button below the game. The team imports one or more files into the bundled graph viewer. Files are processed on that computer, without a network upload or hosted database. Downloads keep the saved events; repeated files and overlapping downloads are deduplicated by event ID. Conflicting or malformed imports leave earlier results unchanged. Storage restrictions can leave events in memory only, so players should download before closing the page. Browser shutdown can leave a run unfinished.
+
+The viewer calculates the four metrics directly from the imported game events and provides build/level filters, sample counts, event details, and CSV exports. No mock observations are inserted into these graphs. The team must collect the downloaded files from testers through its agreed channel; this transfer is manual. Save original files and distinguish QA runs from peer data.
 
 Timing and outcomes work in the gameplay scenes without new scene objects. New markers currently exist only in AnalyticsLab; the team still needs to choose positions in its levels for metric 3.
 
 ## Before adding this to the GDD
 
-Add the public Alpha playable URL, HTTPS dashboard URL, source commit link, and a real WebGL data screenshot. Record the final browser check results. The local Chrome test is QA evidence, not peer playtest findings. Hosting and public delivery checks are still pending; see [the setup guide](WEBGL_ANALYTICS_GUIDE.md).
+After review and publication, add the Alpha playable URL, bundled graph-viewer link, source commit link, and a screenshot of real WebGL exports imported into the graphs. Document the manual download/import steps and browser validation results. Local test runs are QA evidence, not peer playtest findings. See [the setup guide](WEBGL_ANALYTICS_GUIDE.md).
