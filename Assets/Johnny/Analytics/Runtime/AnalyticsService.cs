@@ -23,7 +23,11 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
     public IEventQueue Queue { get; private set; }
     public string DeliveryStatus { get; private set; } = "Starting analytics";
     readonly System.Collections.Generic.List<AnalyticsEvent> earlyEvents = new System.Collections.Generic.List<AnalyticsEvent>();
-    [Serializable] public sealed class Configuration { public string endpoint; public string dataset; }
+    [Serializable] public sealed class Configuration { public string mode; public string endpoint; public string dataset; }
+    public bool DownloadMode { get; private set; } = true;
+    public string Dataset { get; private set; } = "alpha-2026-10-20";
+    string displayedStatus;
+    int displayedCount = -1;
     GameMenuController menus;
     string currentLevel;
     double previousTime;
@@ -62,7 +66,7 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
     IEnumerator InitializeDelivery()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        var config = new Configuration { endpoint = "/api/events", dataset = "alpha-2026-10-20" };
+        var config = new Configuration { mode = "download", dataset = Dataset };
         using (var request = UnityWebRequest.Get(Application.streamingAssetsPath + "/analytics-config.json"))
         {
             request.timeout = 5;
@@ -73,11 +77,14 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
                 catch (ArgumentException) { DeliveryStatus = "Invalid analytics configuration"; }
             }
         }
-        string key = "lightfooted.analytics." + config.dataset + ".outbox.v1";
+        Dataset = string.IsNullOrWhiteSpace(config.dataset) ? Dataset : config.dataset;
+        DownloadMode = config.mode != "server";
+        string key = "lightfooted.analytics." + Dataset + ".outbox.v1";
         Queue = new BrowserEventQueue(() => BrowserAnalyticsBridge.Read(key), value => BrowserAnalyticsBridge.Write(key, value));
         foreach (var data in earlyEvents) Queue.Enqueue(data);
         earlyEvents.Clear();
-        try
+        Endpoint = null;
+        if (!DownloadMode) try
         {
             var address = new Uri(new Uri(Application.absoluteURL), config.endpoint);
             bool loopback = address.IsLoopback;
@@ -90,8 +97,16 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
             Endpoint = null; DeliveryStatus = "Analytics endpoint is invalid; events remain queued";
             yield break;
         }
-        BrowserAnalyticsBridge.Attach(gameObject.name, Endpoint, key);
+        string dashboard = Application.streamingAssetsPath + "/playtest-graphs.html";
+        BrowserAnalyticsBridge.Attach(gameObject.name, Endpoint, key, dashboard);
+#else
+        DownloadMode = Environment.GetEnvironmentVariable("LIGHTFOOTED_ANALYTICS_E2E") != "1";
 #endif
+        if (DownloadMode)
+        {
+            DeliveryStatus = "Data stays in this browser. Download it after playing, then open the graphs.";
+            yield break;
+        }
         yield return Deliver();
     }
 
@@ -113,7 +128,37 @@ public sealed class AnalyticsService : Service<IAnalyticsService>, IAnalyticsSer
         wasActive = CanPlay;
     }
 
-    void Update() { AttachMenus(); Advance(); Reconcile(); }
+    void Update()
+    {
+        AttachMenus(); Advance(); Reconcile();
+        if (Queue == null) return;
+        string status = Queue.LastError ?? DeliveryStatus;
+        if (status == displayedStatus && displayedCount == Queue.Count) return;
+        displayedStatus = status; displayedCount = Queue.Count;
+        BrowserAnalyticsBridge.Status(status, Queue.Count);
+    }
+
+    public PlaytestExport CaptureExport()
+    {
+        Advance();
+        return PlaytestExport.Capture(Queue, Dataset);
+    }
+
+    public void BrowserExportRequested(string unused)
+    {
+        try
+        {
+            if (menus != null && menus.State == MenuState.Playing) menus.Pause();
+            var snapshot = CaptureExport();
+            string filename = "lightfooted-playtest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N").Substring(0, 6) + ".json";
+            BrowserAnalyticsBridge.Download(snapshot.ToJson(), filename);
+            DeliveryStatus = "Download requested. Saved data is kept; importing it twice will not add duplicates.";
+        }
+        catch (Exception error)
+        {
+            DeliveryStatus = "Could not download playtest data: " + error.Message;
+        }
+    }
     void SceneLoaded(Scene scene, LoadSceneMode mode) { if (mode == LoadSceneMode.Single) { Advance(); Reconcile(); } }
 
     void MenuChanged()

@@ -19,7 +19,7 @@ def configure(build, endpoint, dataset):
     path = root / "StreamingAssets" / "analytics-config.json"
     if not (root / "index.html").is_file() or not path.is_file():
         raise ValueError("Expected the directory containing the completed WebGL index.html and StreamingAssets")
-    path.write_text(json.dumps(dict(endpoint=endpoint, dataset=dataset), indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(dict(mode="server", endpoint=endpoint, dataset=dataset), indent=2) + "\n", encoding="utf-8")
     page = root / "index.html"
     dashboard = address.scheme + "://" + address.netloc + "/analytics/"
     page.write_text(page.read_text(encoding="utf-8").replace('href="/analytics/"', 'href="' + escape(dashboard, quote=True) + '"'), encoding="utf-8")
