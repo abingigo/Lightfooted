@@ -39,26 +39,17 @@ public class LightColliderWindow : MonoBehaviour
 
         float lightX = transform.position.x;
 
-        // Only active while the light's reach overlaps the platform AND
-        // (if this light blinks) it's currently switched on. This script is
-        // now the ONLY thing that writes to col.enabled -- BlinkingLight no
-        // longer touches the collider itself, so the two can't override
-        // each other frame to frame.
         bool onPlatform = (lightX + radius) > platformMinX && (lightX - radius) < platformMaxX;
         bool lightActive = blinkingLight == null || blinkingLight.IsOn;
         col.enabled = onPlatform && lightActive;
         if (!col.enabled) return;
 
-        // Clamp the box's CENTER so its fixed-width edges can never extend
-        // past the platform -- this is what makes it "snap" to the edge
-        // instead of hanging over it.
         float minCenter = platformMinX + baseWidth / 2f;
         float maxCenter = platformMaxX - baseWidth / 2f;
 
         float centerX;
         if (minCenter > maxCenter)
         {
-            // Platform is narrower than the box itself -- best we can do is center on it.
             centerX = (platformMinX + platformMaxX) / 2f;
         }
         else
@@ -66,15 +57,6 @@ public class LightColliderWindow : MonoBehaviour
             centerX = Mathf.Clamp(lightX, minCenter, maxCenter);
         }
 
-        // Size never changes from what was set in the Editor -- position is
-        // the only thing this script touches.
-        // Y span is derived from the platform's own collider bounds every
-        // frame, so every light referencing the same platform lines up
-        // exactly. We convert the desired WORLD-space center into this
-        // object's LOCAL space via InverseTransformPoint rather than a plain
-        // subtraction, because collider offset/size are affected by this
-        // object's own transform scale -- a manual subtraction only works if
-        // the light's scale happens to be exactly (1,1,1).
         float platformTop = platform.bounds.max.y;
         float platformBottom = platform.bounds.min.y;
         float platformHeightWorld = platformTop - platformBottom;

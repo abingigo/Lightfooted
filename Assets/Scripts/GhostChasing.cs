@@ -57,14 +57,13 @@ public class GhostChase : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            text.text = message;
-             Time.timeScale = 0f;
+            LightPlatformer.UI.GameMenuController.NotifyGameOver();
         }
     }
 
     void OnDrawGizmosSelected()
     {
-             Gizmos.color = Color.red;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
     }
 }
