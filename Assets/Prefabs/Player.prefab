@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 900000000000000003}
   - component: {fileID: 900000000000000005}
   - component: {fileID: 7325150602004068245}
+  - component: {fileID: 4870079878230462150}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -210,8 +211,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.75
+  m_Offset: {x: -0.015128136, y: 0.002521515}
+  m_Radius: 0.5512314
 --- !u!114 &5880171120732626742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0829b4722b1e24e91bbb8404bbf16505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameEndText
-  EndY: -20
+  EndY: -30
 --- !u!114 &900000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,6 +315,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb823aeb0879ed468aecd03323a9810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Collectables.Collector
+--- !u!114 &4870079878230462150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8da0cd7bb8a974e8aa0a5fc34a2496c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LightPlatformer.UI::CheckpointProgress
 --- !u!1 &5924545126893405038
 GameObject:
   m_ObjectHideFlags: 0
