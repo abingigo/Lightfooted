@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="370" viewBox="0 0 760 370" role="img" aria-label="Death rate with restart context planning mockup">
+<rect width="760" height="370" rx="12" fill="#172532"/>
+<text x="30" y="32" fill="#edca87" font-family="sans-serif" font-size="13">PLANNING MOCKUP · ILLUSTRATIVE VALUES · NOT PLAYTEST RESULTS</text>
+<text x="30" y="70" fill="#e3edf1" font-family="sans-serif" font-size="25">Death rate with restart context</text>
+<text x="30" y="120" fill="#e3edf1" font-family="sans-serif" font-size="15">Tutorial / died</text>
+<rect x="250" y="100" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="100" width="60.0" height="28" rx="3" fill="#f29593"/>
+<text x="668" y="120" fill="#e3edf1" font-family="sans-serif" font-size="15">15%</text>
+<text x="30" y="175" fill="#e3edf1" font-family="sans-serif" font-size="15">Tutorial / restarted</text>
+<rect x="250" y="155" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="155" width="20.0" height="28" rx="3" fill="#edca87"/>
+<text x="668" y="175" fill="#e3edf1" font-family="sans-serif" font-size="15">5%</text>
+<text x="30" y="230" fill="#e3edf1" font-family="sans-serif" font-size="15">Level 1 / died</text>
+<rect x="250" y="210" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="210" width="140.0" height="28" rx="3" fill="#f29593"/>
+<text x="668" y="230" fill="#e3edf1" font-family="sans-serif" font-size="15">35%</text>
+<text x="30" y="285" fill="#e3edf1" font-family="sans-serif" font-size="15">Level 1 / restarted</text>
+<rect x="250" y="265" width="400" height="28" rx="3" fill="#31434f"/>
+<rect x="250" y="265" width="40.0" height="28" rx="3" fill="#edca87"/>
+<text x="668" y="285" fill="#e3edf1" font-family="sans-serif" font-size="15">10%</text>
+</svg>

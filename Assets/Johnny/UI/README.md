@@ -1,5 +1,15 @@
 # Game menus
 
+## Assembly portability
+
+Use Unity **6000.3.22f1**, as recorded in `ProjectSettings/ProjectVersion.txt`, and let Package Manager restore the committed dependencies. The UI package is named `com.unity.ugui`, but its assembly is **`UnityEngine.UI`**. Assembly definitions must reference the assembly name, not the package name. Johnny's UI, obstacles, and tests declare `UnityEngine.UI` and `Unity.TextMeshPro` explicitly; the obstacles use UI base types through TMP text.
+
+The assembly definitions are text configuration files, not PC-specific compiled libraries. Keep each `.asmdef` with its committed `.meta` file. Do not replace package files or copy another computer's `Library` folder. `AssemblyReferenceTests` checks that every declared reference resolves and that UI base types have an explicit dependency. This catches invalid names even if an editor supplies UI references implicitly.
+
+The original October 11 commit also imported successfully without a project Library cache in Unity 6000.3.22f1 during the October 18 investigation. Thus the incorrect reference names are confirmed, but the reported teammate compilation failure has not been reproduced with that editor version. An exact Console error and editor version are needed to identify any separate cause.
+
+Verification on October 18, 2026: three new reference checks fail against the original declarations and pass after correction. The current team checkout imports with no script errors, all nine focused reference/menu tests pass, and the Windows development build succeeds with the team's enabled scene list. Scenes, prefabs, existing metadata, package versions, and gameplay scripts are unchanged by this repair. These checks do not represent a full gameplay regression run on the team's revised levels.
+
 Open `Assets/Scenes/Johnny/LevelSelect.unity` and press Play. Builds start with that scene. Opening the tutorial directly in the editor also gets the gameplay UI automatically. The tutorial scene is unchanged.
 
 - Select a level, then Play. Only enabled playable build scenes are listed; SampleScene and NewScene remain unavailable.
