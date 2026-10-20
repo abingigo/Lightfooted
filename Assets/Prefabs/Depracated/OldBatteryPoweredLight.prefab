@@ -81,11 +81,11 @@ GameObject:
   - component: {fileID: 8286567591925903568}
   - component: {fileID: 7874764088699477174}
   - component: {fileID: 7527371109661041290}
-  - component: {fileID: 900000000000000004}
-  - component: {fileID: 900000000000000009}
+  - component: {fileID: 900000000000000001}
+  - component: {fileID: 900000000000000008}
   m_Layer: 0
-  m_Name: ThrowableLight
-  m_TagString: Untagged
+  m_Name: OldBatteryPoweredLight
+  m_TagString: Light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,7 +99,7 @@ Transform:
   m_GameObject: {fileID: 8837270321795900220}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.12, y: -4.44, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -155,8 +155,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0.6, b: 0.2, a: 1}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 0.2, g: 0.8, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -225,14 +225,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8837270321795900220}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 3
-  m_AngularDamping: 2
-  m_GravityScale: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -242,7 +242,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!58 &7527371109661041290
 CircleCollider2D:
@@ -280,7 +280,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.4
---- !u!114 &900000000000000004
+--- !u!114 &900000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,11 +289,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8837270321795900220}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af1415bce1a941009e8063eaba9ccb25, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::ThrowableLight
+  m_Script: {fileID: 11500000, guid: 83ddd55dd77f456dbac9bf79264a507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BatteryPoweredLight
+  light2D: {fileID: 8286567591925903568}
   lightRange: {fileID: 3068163230383650930}
---- !u!114 &900000000000000009
+  batterySocket: {fileID: 0}
+  energyPerSecond: 1
+--- !u!114 &900000000000000008
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
