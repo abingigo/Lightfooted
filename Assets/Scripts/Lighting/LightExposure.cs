@@ -19,6 +19,7 @@ namespace Lighting
         public Collider2D Sensor => sensor;
         public bool IsLit { get; private set; }
         public bool IsExposed { get; private set; }
+        public bool GracePaused { get; set; }
 
         public event Action<LightExposure> ExposureChanged;
 
@@ -37,6 +38,11 @@ namespace Lighting
             graceLeft = 0;
         }
 
+        public void RefillGrace(int steps)
+        {
+            if (useGrace && IsExposed) graceLeft = Mathf.Max(graceLeft, steps);
+        }
+
         internal bool Evaluate(bool lit, int graceSteps)
         {
             bool exposed;
@@ -47,7 +53,7 @@ namespace Lighting
             }
             else if (graceLeft > 0)
             {
-                graceLeft--;
+                if (!GracePaused) graceLeft--;
                 exposed = true;
             }
             else exposed = false;

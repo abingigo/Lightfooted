@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6463115130651525708}
   - component: {fileID: 3810358043804360459}
   m_Layer: 0
-  m_Name: MovingLightSource
+  m_Name: OldMovingLightSource
   m_TagString: Light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerLightTracker))]
 public class PlayerThrowableLight : MonoBehaviour
 {
     [Header("Interaction")]
@@ -63,26 +64,20 @@ public class PlayerThrowableLight : MonoBehaviour
 
         if (nearest == null) return;
 
-        if (lightTracker != null) lightTracker.ForgetLight(nearest.LightRange);
+        lightTracker.ForgetLight(nearest.LightRange);
         nearest.PickUp(holdPoint != null ? holdPoint : transform,
             holdPoint != null ? Vector3.zero : new Vector3(facing * holdOffset.x, holdOffset.y, holdOffset.z));
         carriedLight = nearest;
-        if (lightTracker != null)
-        {
-            lightTracker.hasThrowableLight = true;
-            lightTracker.UpdateCollision();
-        }
+        lightTracker.hasThrowableLight = true;
+        lightTracker.UpdateCollision();
     }
 
     void Throw()
     {
         ThrowableLight light = carriedLight;
         carriedLight = null;
-        if (lightTracker != null)
-        {
-            lightTracker.hasThrowableLight = false;
-            lightTracker.UpdateCollision();
-        }
+        lightTracker.hasThrowableLight = false;
+        lightTracker.UpdateCollision();
 
         Vector2 position = (Vector2)transform.position + new Vector2(facing * throwOffset, holdOffset.y);
         Vector2 impulse = new Vector2(facing * throwImpulse, upwardImpulse);

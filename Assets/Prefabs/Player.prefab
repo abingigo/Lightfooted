@@ -101,6 +101,8 @@ MonoBehaviour:
   targets:
   - {fileID: 8816855233133819564}
   oneWay: 0
+  maxSnapDepth: 0
+  snapDuration: 0.1
 --- !u!1 &1529930655011214078
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +204,8 @@ MonoBehaviour:
   targets:
   - {fileID: 1991283683311889894}
   oneWay: 0
+  maxSnapDepth: 0
+  snapDuration: 0.1
 --- !u!1 &2687035301065242995
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +292,8 @@ MonoBehaviour:
   targets:
   - {fileID: 5225901666203134505}
   oneWay: 1
+  maxSnapDepth: 0.5
+  snapDuration: 0.1
 --- !u!1 &4251545105464418845
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +306,6 @@ GameObject:
   - component: {fileID: 2304613117365614979}
   - component: {fileID: 7618815078754844331}
   - component: {fileID: 7567501410273521280}
-  - component: {fileID: -7189678497009008597}
   - component: {fileID: 5880171120732626742}
   - component: {fileID: 2872000379739120972}
   - component: {fileID: 1892863442499197113}
@@ -308,6 +313,8 @@ GameObject:
   - component: {fileID: 900000000000000005}
   - component: {fileID: 7325150602004068245}
   - component: {fileID: 3678564207102497089}
+  - component: {fileID: 7346150036527251405}
+  - component: {fileID: 6982360337933424085}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -465,42 +472,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!58 &-7189678497009008597
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251545105464418845}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.75
 --- !u!114 &5880171120732626742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,7 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5f545766cc84dcd84b51b414c93051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLightTracker
-  collisionBox: {fileID: 7618815078754844331}
+  collisionBox: {fileID: 0}
   hasLantern: 0
   hasThrowableLight: 0
   lightTag: Light
@@ -617,6 +588,100 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Lighting.LightExposure
   sensor: {fileID: 7618815078754844331}
   useGrace: 1
+--- !u!114 &7346150036527251405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e694fffc97aa349bdbd62b6624364b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Lighting.LightGravity
+  sensor: {fileID: 7618815078754844331}
+--- !u!114 &6982360337933424085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc5d457dbdb2fc47b219f3054ea3cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DashLightGrace
+  exposure: {fileID: 3678564207102497089}
+--- !u!1 &5770248729058006695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6551596505783001500}
+  - component: {fileID: 1023762114460564688}
+  m_Layer: 7
+  m_Name: LightArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6551596505783001500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770248729058006695}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 248008550843724002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1023762114460564688
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770248729058006695}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.75
 --- !u!1 &6605864045958212527
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,6 +783,8 @@ MonoBehaviour:
   targets:
   - {fileID: 6519566406658578064}
   oneWay: 0
+  maxSnapDepth: 0
+  snapDuration: 0.1
 --- !u!1 &8298202722447047605
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +862,7 @@ GameObject:
   - component: {fileID: 248008550843724002}
   - component: {fileID: 6195501300802841691}
   - component: {fileID: 4031485824179340207}
+  - component: {fileID: 3021311356223959581}
   m_Layer: 0
   m_Name: lanternLight
   m_TagString: Untagged
@@ -814,7 +882,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6551596505783001500}
   m_Father: {fileID: 6202738342181332388}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6195501300802841691
@@ -882,3 +951,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanternTimer
   duration: 5
+--- !u!114 &3021311356223959581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8643676669912785724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5bc53481a0ca7e44828d724f11baa86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Lighting.LightSource
+  areas:
+  - {fileID: 1023762114460564688}
+  sharedProfile: {fileID: 0}
+  profile:
+    illuminates: 1
+    effects: []
+  references:
+    version: 2
+    RefIds: []

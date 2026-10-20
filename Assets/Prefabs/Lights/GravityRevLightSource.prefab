@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3345910006353317015}
   - component: {fileID: 3972260071660902138}
   - component: {fileID: 1274627030288231001}
-  - component: {fileID: 6092834489741964226}
-  m_Layer: 0
+  - component: {fileID: -3537086649137659003}
+  m_Layer: 7
   m_Name: GravityRevLightSource
   m_TagString: Light
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ PolygonCollider2D:
       - {x: -0.7495503, y: 6.0863557}
       - {x: 0.81216305, y: 6.172711}
   m_UseDelaunayMesh: 1
---- !u!114 &6092834489741964226
+--- !u!114 &-3537086649137659003
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,6 +147,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7735426721353825898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef5479c99cdd24697b74ed49b1dad817, type: 3}
+  m_Script: {fileID: 11500000, guid: b5bc53481a0ca7e44828d724f11baa86, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GravityReverseLight
+  m_EditorClassIdentifier: Assembly-CSharp::Lighting.LightSource
+  areas:
+  - {fileID: 1274627030288231001}
+  sharedProfile: {fileID: 11400000, guid: c685c84aa1f5e664ab51a6cd08fe122f, type: 2}
+  profile:
+    illuminates: 1
+    effects: []
+  references:
+    version: 2
+    RefIds: []

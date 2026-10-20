@@ -27,9 +27,12 @@ public class PlayerController : MonoBehaviour
     bool dashQueued;
     Vector2 dashDirection;
 
+    PlayerLightTracker playerLightTracker;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerLightTracker = GetComponent<PlayerLightTracker>();
     }
 
     void Update()
@@ -141,6 +144,7 @@ public class PlayerController : MonoBehaviour
     private void StopDash()
     {
         isDashing = false;
+        playerLightTracker.UpdateCollision();
     }
 
     private void ResetCooldown()
