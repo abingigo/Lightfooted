@@ -32,7 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level 3.unity
     guid: afa45e118dd6342ef99dfc8d412de220
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Johnny/AnalyticsLab.unity
     guid: e34d249a23b1ffe44ac1436a31029824
   m_configObjects:
