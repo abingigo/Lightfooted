@@ -1,7 +1,0 @@
-{
-    "name": "Lightfooted.Analytics.Tests",
-    "references": ["Lightfooted.Analytics", "LightPlatformer.UI"],
-    "optionalUnityReferences": ["TestAssemblies"],
-    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
-    "autoReferenced": false
-}

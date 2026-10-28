@@ -108,4 +108,3 @@ InitTestScene*.unity*
 .DS_Store
 .vscode/
 /tmp/
-/Tools/Analytics/__pycache__/

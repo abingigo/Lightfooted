@@ -19,7 +19,6 @@ namespace LightPlatformer.UI
         public string ErrorMessage { get; private set; }
         public event Action ViewChanged;
         public event Action<float> LoadingProgress;
-        public event Action<string> SceneLoadRequested;
         GameMenuView view;
         int inputResumeFrame;
 
@@ -184,7 +183,6 @@ namespace LightPlatformer.UI
         IEnumerator Load(string path)
         {
             ErrorMessage = null;
-            SceneLoadRequested?.Invoke(path);
             SetState(MenuState.Loading);
             // Unpause before loading so the restarted level has a running clock.
             Time.timeScale = 1f;
