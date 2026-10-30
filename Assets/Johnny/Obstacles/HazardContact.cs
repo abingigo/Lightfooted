@@ -35,17 +35,15 @@ namespace LightPlatformer.Obstacles
             return false;
         }
 
-        public static void Hurt(Collider2D other, Collider2D hazard)
+        public static void Hurt(Collider2D other, Collider2D hazard, string caller = "unknown")
         {
             if (!GameMenuController.GameplayInputBlocked && BodyTouches(other, hazard))
-                GameMenuController.NotifyGameOver();
+                GameMenuController.NotifyGameOver(caller);
         }
 
         public static bool PlayerOccupies(BoxCollider2D area)
         {
             Geometry(area, out var center, out var size, out var angle);
-            // Include the persistent sensor, then compare body geometry. This also
-            // prevents a platform reappearing through a player in darkness.
             int count = Physics2D.OverlapBox(center, size + Vector2.one * 0.04f, angle, new ContactFilter2D().NoFilter(), hits);
             var areaBounds = new Bounds(center, size);
             for (int i = 0; i < count; i++)

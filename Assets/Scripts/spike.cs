@@ -24,7 +24,7 @@ public class spike : MonoBehaviour
     {
         if (!other.CompareTag("Player") || !InLight()) return;
 
-        LightPlatformer.UI.GameMenuController.NotifyGameOver();
+        LightPlatformer.UI.GameMenuController.NotifyGameOver("spike");
     }
 
     bool InLight()

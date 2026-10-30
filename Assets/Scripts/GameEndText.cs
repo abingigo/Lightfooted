@@ -11,7 +11,7 @@ public class GameEndText : MonoBehaviour
         if (!hasEnded && transform.position.y < EndY)
         {
             hasEnded = true;
-            LightPlatformer.UI.GameMenuController.NotifyGameOver();
+            LightPlatformer.UI.GameMenuController.NotifyGameOver("fall");
         }
     }
 }

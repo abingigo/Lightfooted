@@ -11,6 +11,6 @@ public class fatalSpike : MonoBehaviour
 
     void OnTriggerStay2D (Collider2D other)
     {
-        HazardContact.Hurt(other, col);
+        HazardContact.Hurt(other, col, "spike");
     }
 }

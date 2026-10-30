@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Use Shift to dash
+  m_text: Use Left Shift to dash
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -17.589844, w: 0}
+  m_margin: {x: 0, y: 0, z: -50.525078, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1751,6 +1751,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8275210967138653454, guid: 6836be48edf4d6e428258908924f9805, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1930575942}
+    - target: {fileID: 8275210967138653454, guid: 6836be48edf4d6e428258908924f9805, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 8331345853875592717, guid: 6836be48edf4d6e428258908924f9805, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -1767,6 +1775,11 @@ PrefabInstance:
 --- !u!4 &1766942613 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6202738342181332388, guid: 6836be48edf4d6e428258908924f9805, type: 3}
+  m_PrefabInstance: {fileID: 1766942612}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1930575942 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3914076840807864546, guid: 6836be48edf4d6e428258908924f9805, type: 3}
   m_PrefabInstance: {fileID: 1766942612}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2045697109

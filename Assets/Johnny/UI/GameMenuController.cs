@@ -76,6 +76,7 @@ namespace LightPlatformer.UI
 
         void Update()
         {
+            if (State == MenuState.Playing) LevelStats.AttemptSeconds += Time.deltaTime;
             bool escape = Input.GetKeyDown(KeyCode.Escape);
             if (escape && view.CloseControls()) return;
             if (escape || Input.GetKeyDown(KeyCode.P))
@@ -109,26 +110,38 @@ namespace LightPlatformer.UI
             SetState(MenuState.Playing);
         }
 
-        public static void NotifyGameOver()
+        public static void NotifyGameOver(string cause = "unknown")
         {
-            WebAnalytics.Track("level_failed", ("level", SceneManager.GetActiveScene().name));
-            if (Instance != null) Instance.Finish(MenuState.GameOver);
+            if (Instance != null) Instance.Finish(MenuState.GameOver, cause);
         }
 
         public static void NotifyVictory()
         {
-            WebAnalytics.Track("level_completed", ("level", SceneManager.GetActiveScene().name));
             if (Instance != null) Instance.Finish(MenuState.Victory);
         }
 
-        void Finish(MenuState result)
+        void Finish(MenuState result, string cause = null)
         {
             if (State != MenuState.Playing) return;
 
+            string level = SceneManager.GetActiveScene().name;
+
             if (result == MenuState.GameOver)
             {
-                CheckpointProgress.deathTimes++;//death time counter here
+                CheckpointProgress.deathTimes++;
+                LevelStats.RecordDeath(level);
+
+                PlayerDeathContext ctx = PlayerDeathContext.Current;
+                if (ctx != null)
+                    WebAnalytics.ReportDeath(level, cause, ctx.LastGroundedPosition, ctx.transform.position);
             }
+            else if (result == MenuState.Victory)
+            {
+                WebAnalytics.ReportCompletion(level, LevelStats.AttemptSeconds,
+                LevelStats.CoinStatus(level), LevelStats.DeathsIn(level));
+                LevelStats.ClearLevel(level);
+            }
+
             Time.timeScale = 0f;
             SetState(result);
         }
@@ -163,7 +176,6 @@ namespace LightPlatformer.UI
             if (IsLoading) return false;
             if (!Application.CanStreamedLevelBeLoaded(LevelCatalog.MenuPath))
             {
-                // Useful when testing a level directly or in a build with no menu scene.
                 Time.timeScale = 0f;
                 SetState(MenuState.LevelSelect);
                 return true;
@@ -183,8 +195,8 @@ namespace LightPlatformer.UI
         IEnumerator Load(string path)
         {
             ErrorMessage = null;
+            LevelStats.StartAttempt();
             SetState(MenuState.Loading);
-            // Unpause before loading so the restarted level has a running clock.
             Time.timeScale = 1f;
             AsyncOperation operation;
             try { operation = SceneManager.LoadSceneAsync(path, LoadSceneMode.Single); }

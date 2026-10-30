@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 6982360337933424085}
   - component: {fileID: 4870079878230462150}
   - component: {fileID: 9185585990969153716}
+  - component: {fileID: 8275210967138653454}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -666,6 +667,23 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.75
+--- !u!114 &8275210967138653454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12e0ba70e8ba4222836901a4a72a68a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathContext
+  groundCheck: {fileID: 3914076840807864546}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckRadius: 0.15
 --- !u!1 &5770248729058006695
 GameObject:
   m_ObjectHideFlags: 0
