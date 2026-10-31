@@ -156,7 +156,7 @@ namespace LightPlatformer.UI
 
             bool victory = state == MenuState.Victory;
             bool paused = state == MenuState.Paused;
-            bool hasSave = state == MenuState.GameOver && CheckpointProgress.reachedCheckpoint;
+            bool hasSave = state == MenuState.GameOver && CheckpointProgress.HasCheckpointForScene(SceneManager.GetActiveScene().path);
 
             Text(panel, paused ? "Take a breath" : victory ? "Level complete" : "Try again", 34, Color.white, 0, 158, 400, 50);
             Text(panel, paused ? "Your game is paused." : victory ? "You found your way through." : "A new attempt starts with a little light.", 17, Muted, 0, 111, 400, 42);
