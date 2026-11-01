@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     bool isGrounded;
+    public bool IsGrounded => isGrounded;
     public bool isDashing = false;
     bool isCoolDownReady = true;
     float moveX;
