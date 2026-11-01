@@ -143,6 +143,10 @@ namespace LightPlatformer.UI
             bar.anchorMin = bar.anchorMax = new Vector2(0.5f, 1); bar.anchoredPosition = new Vector2(0, -32);
             var scene = new LevelEntry(SceneManager.GetActiveScene().path);
             Text(bar, scene.Title, 16, Color.white, -330, 0, 240, 36);
+            var coins = Text(bar, "", 16, Accent, 0, 0, 200, 36);
+            coins.gameObject.name = "Coin counter";
+            coins.alignment = TextAlignmentOptions.Center;
+            coins.gameObject.AddComponent<CoinCounter>();
             var pause = Button(bar, "Pause  [Esc]", 144, 40, 378, 0, controller.Pause);
             pause.navigation = new Navigation { mode = Navigation.Mode.None };
 
