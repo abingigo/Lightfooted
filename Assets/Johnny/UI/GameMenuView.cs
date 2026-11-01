@@ -145,6 +145,17 @@ namespace LightPlatformer.UI
             Text(bar, scene.Title, 16, Color.white, -330, 0, 240, 36);
             var pause = Button(bar, "Pause  [Esc]", 144, 40, 378, 0, controller.Pause);
             pause.navigation = new Navigation { mode = Navigation.Mode.None };
+
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player == null) return;
+            foreach (var behaviour in player.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (!(behaviour is ILanternStatus lantern)) continue;
+                var meter = new GameObject("Lantern meter", typeof(RectTransform)).AddComponent<LanternMeter>();
+                meter.transform.SetParent(canvas, false);
+                meter.Bind(lantern);
+                break;
+            }
         }
 
         void RenderPauseOrResult(MenuState state)

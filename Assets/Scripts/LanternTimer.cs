@@ -1,9 +1,14 @@
 using UnityEngine;
 
-public class LanternTimer : MonoBehaviour
+public class LanternTimer : MonoBehaviour, LightPlatformer.UI.ILanternStatus
 {
     public float duration = 5f;
     PlayerLightTracker playerTrack;
+    float expiresAt;
+
+    public Transform Anchor => playerTrack != null ? playerTrack.transform : transform;
+    public float RemainingSeconds => isActiveAndEnabled ? Mathf.Max(0f, expiresAt - Time.time) : 0f;
+    public float DurationSeconds { get; private set; }
 
     void Awake()
     {
@@ -23,6 +28,8 @@ public class LanternTimer : MonoBehaviour
     public void ResetTimer()
     {
         CancelInvoke(nameof(TurnOff));
+        DurationSeconds = duration;
+        expiresAt = Time.time + duration;
         Invoke(nameof(TurnOff), duration);
     }
 
