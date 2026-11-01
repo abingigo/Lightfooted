@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerLightTracker))]
 public class PlayerThrowableLight : MonoBehaviour
 {
     [Header("Interaction")]
@@ -16,21 +15,14 @@ public class PlayerThrowableLight : MonoBehaviour
     [SerializeField] float upwardImpulse = 2f;
     [SerializeField] float pickupDelay = 0.35f;
 
-    PlayerLightTracker lightTracker;
     ThrowableLight carriedLight;
     float facing = 1f;
-
-    void Awake()
-    {
-        lightTracker = GetComponent<PlayerLightTracker>();
-    }
 
     void Update()
     {
         if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
         float horizontal = Input.GetAxisRaw("Horizontal");
         if (horizontal != 0f) facing = Mathf.Sign(horizontal);
-
         if (carriedLight == null)
         {
             if (Input.GetKeyDown(pickupKey)) TryPickUp();
@@ -64,24 +56,40 @@ public class PlayerThrowableLight : MonoBehaviour
 
         if (nearest == null) return;
 
-        lightTracker.ForgetLight(nearest.LightRange);
         nearest.PickUp(holdPoint != null ? holdPoint : transform,
             holdPoint != null ? Vector3.zero : new Vector3(facing * holdOffset.x, holdOffset.y, holdOffset.z));
         carriedLight = nearest;
-        lightTracker.hasThrowableLight = true;
-        lightTracker.UpdateCollision();
     }
 
     void Throw()
     {
         ThrowableLight light = carriedLight;
         carriedLight = null;
-        lightTracker.hasThrowableLight = false;
-        lightTracker.UpdateCollision();
 
         Vector2 position = (Vector2)transform.position + new Vector2(facing * throwOffset, holdOffset.y);
         Vector2 impulse = new Vector2(facing * throwImpulse, upwardImpulse);
         light.Throw(position, impulse, pickupDelay);
+    }
+
+    void OnGUI()
+    {
+        if (carriedLight == null || !carriedLight.IsOn) return;
+        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
+
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 screen = cam.WorldToScreenPoint(transform.position + Vector3.up * 1.2f);
+        if (screen.z <= 0f) return;
+
+        Color oldColor = GUI.contentColor;
+        GUI.contentColor = Color.purple;
+
+        GUI.Box(
+
+        new Rect(screen.x - 35f, Screen.height - screen.y - 14f, 70f, 28f),
+         carriedLight.TimeLeft.ToString("0.0")+ "s");
+        GUI.contentColor = oldColor;
     }
 
     void OnDrawGizmosSelected()

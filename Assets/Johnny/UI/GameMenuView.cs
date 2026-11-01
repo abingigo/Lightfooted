@@ -136,7 +136,15 @@ namespace LightPlatformer.UI
                 levelButtons[i].colors = colors;
             }
         }
+        void OnGUI()
+        {
+            if (controller == null || controller.State != MenuState.Playing) return;
+            int seconds = Mathf.FloorToInt(LevelStats.AttemptSeconds);
 
+            GUI.Box(new Rect(16f, 64f, 150f, 28f),
+                "Time passed: " + (seconds / 60).ToString("00") + ":" +
+                (seconds % 60).ToString("00"));
+        }
         void RenderHud()
         {
             var bar = Box(canvas, "Gameplay menu", 920, 44, 0, 0);
