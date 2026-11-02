@@ -143,8 +143,23 @@ namespace LightPlatformer.UI
             bar.anchorMin = bar.anchorMax = new Vector2(0.5f, 1); bar.anchoredPosition = new Vector2(0, -32);
             var scene = new LevelEntry(SceneManager.GetActiveScene().path);
             Text(bar, scene.Title, 16, Color.white, -330, 0, 240, 36);
+            var coins = Text(bar, "", 16, Accent, 0, 0, 200, 36);
+            coins.gameObject.name = "Coin counter";
+            coins.alignment = TextAlignmentOptions.Center;
+            coins.gameObject.AddComponent<CoinCounter>();
             var pause = Button(bar, "Pause  [Esc]", 144, 40, 378, 0, controller.Pause);
             pause.navigation = new Navigation { mode = Navigation.Mode.None };
+
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player == null) return;
+            foreach (var behaviour in player.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (!(behaviour is ILanternStatus lantern)) continue;
+                var meter = new GameObject("Lantern meter", typeof(RectTransform)).AddComponent<LanternMeter>();
+                meter.transform.SetParent(canvas, false);
+                meter.Bind(lantern);
+                break;
+            }
         }
 
         void RenderPauseOrResult(MenuState state)
@@ -156,7 +171,7 @@ namespace LightPlatformer.UI
 
             bool victory = state == MenuState.Victory;
             bool paused = state == MenuState.Paused;
-            bool hasSave = state == MenuState.GameOver && CheckpointProgress.reachedCheckpoint;
+            bool hasSave = state == MenuState.GameOver && CheckpointProgress.HasCheckpointForScene(SceneManager.GetActiveScene().path);
 
             Text(panel, paused ? "Take a breath" : victory ? "Level complete" : "Try again", 34, Color.white, 0, 158, 400, 50);
             Text(panel, paused ? "Your game is paused." : victory ? "You found your way through." : "A new attempt starts with a little light.", 17, Muted, 0, 111, 400, 42);

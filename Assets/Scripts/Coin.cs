@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Coin : MonoBehaviour
@@ -19,7 +18,7 @@ public class Coin : MonoBehaviour
 
     void Start()
     {
-        LevelStats.RegisterCoinLevel(SceneManager.GetActiveScene().name);
+        LevelStats.RegisterCoin(gameObject.scene.name, GetInstanceID());
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -28,7 +27,7 @@ public class Coin : MonoBehaviour
         if (!other.transform.root.CompareTag("Player")) return;
 
         collected = true;
-        LevelStats.CoinCollected = true;
+        LevelStats.CollectCoin(gameObject.scene.name, GetInstanceID());
         StartCoroutine(Collect());
     }
 

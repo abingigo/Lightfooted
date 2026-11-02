@@ -9,6 +9,11 @@ public class CheckpointProgress : MonoBehaviour
     public static Vector3 savePos;
     public static string saveScene;
 
+    public static bool HasCheckpointForScene(string scenePath)
+    {
+        return reachedCheckpoint && saveScene == scenePath;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetRun()//death time countar
     {
@@ -18,7 +23,7 @@ public class CheckpointProgress : MonoBehaviour
 
     void Start()
     {
-        if (reachedCheckpoint &&saveScene ==  gameObject.scene.path)
+        if (HasCheckpointForScene(gameObject.scene.path))
         {
             transform.position = savePos;
         }
