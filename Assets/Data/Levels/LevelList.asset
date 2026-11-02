@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a14e00a7d434b95a50c4e6690191ee3, type: 3}
   m_Name: LevelList
   m_EditorClassIdentifier: Lightfooted.Core::Core.LevelList
+  menu:
+    guid: c44b70971f10f2241969e7348d63e43b
+    path: Assets/Scenes/Johnny/LevelSelect.unity
   levels:
   - scene:
       guid: 6f0945330b69a44c8ac3951d5d6600e6

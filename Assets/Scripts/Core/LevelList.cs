@@ -23,9 +23,13 @@ namespace Core
             public bool IsPlayable => scene.IsInBuild;
         }
 
+        [Tooltip("The level select scene. Go To Menu loads it.")] [SerializeField]
+        private SceneReference menu = new();
+
         [Tooltip("Levels in play order.")] [SerializeField]
         private Level[] levels = { };
 
+        public string MenuPath => menu.Path;
         public IReadOnlyList<Level> Levels => levels;
     }
 }
