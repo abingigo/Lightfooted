@@ -1927,14 +1927,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8275210967138653454, guid: 6836be48edf4d6e428258908924f9805, type: 3}
-      propertyPath: groundCheck
-      value: 
-      objectReference: {fileID: 1930575942}
-    - target: {fileID: 8275210967138653454, guid: 6836be48edf4d6e428258908924f9805, type: 3}
-      propertyPath: groundMask.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 8331345853875592717, guid: 6836be48edf4d6e428258908924f9805, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -1995,11 +1987,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1930575942 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3914076840807864546, guid: 6836be48edf4d6e428258908924f9805, type: 3}
-  m_PrefabInstance: {fileID: 1766942612}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2001140223
 GameObject:
   m_ObjectHideFlags: 0
