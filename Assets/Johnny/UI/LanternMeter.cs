@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ namespace LightPlatformer.UI
     [DefaultExecutionOrder(1000)]
     public sealed class LanternMeter : MonoBehaviour
     {
-        static readonly Color Frame = new Color32(94, 125, 125, 255);
         static readonly Color Warning = new Color32(255, 202, 112, 255);
         ILanternStatus source;
         Object sourceObject;
@@ -15,11 +13,8 @@ namespace LightPlatformer.UI
         RectTransform canvas;
         RectTransform fill;
         CanvasGroup visibility;
-        Image border;
         Image fillImage;
-        TMP_Text label;
         Camera worldCamera;
-        int shownSeconds = -1;
 
         public void Bind(ILanternStatus lantern)
         {
@@ -27,24 +22,12 @@ namespace LightPlatformer.UI
             sourceObject = lantern as Object;
             root = (RectTransform)transform;
             root.anchorMin = root.anchorMax = new Vector2(0.5f, 0.5f);
-            root.sizeDelta = new Vector2(132, 44);
+            root.sizeDelta = new Vector2(112, 7);
             canvas = (RectTransform)GetComponentInParent<Canvas>().transform;
             visibility = gameObject.AddComponent<CanvasGroup>();
             visibility.interactable = false;
             visibility.blocksRaycasts = false;
-            border = gameObject.AddComponent<Image>();
-            border.raycastTarget = false;
-            border.color = Frame;
-            Box(root, "Panel", 128, 40, 0, 0, new Color32(17, 22, 29, 240));
-            var textRect = Box(root, "Time left", 120, 24, 0, 7);
-            label = textRect.gameObject.AddComponent<TextMeshProUGUI>();
-            label.font = TMP_Settings.defaultFontAsset;
-            label.fontSize = 16;
-            label.color = Color.white;
-            label.alignment = TextAlignmentOptions.Center;
-            label.textWrappingMode = TextWrappingModes.NoWrap;
-            label.raycastTarget = false;
-            var track = Box(root, "Time bar", 112, 7, 0, -11, new Color32(53, 65, 76, 255));
+            var track = Box(root, "Time bar", 112, 7, 0, 0, new Color32(53, 65, 76, 255));
             fill = Box(track, "Time fill", 0, 0, 0, 0, new Color32(165, 234, 203, 255));
             fill.anchorMin = Vector2.zero;
             fill.anchorMax = Vector2.one;
@@ -71,16 +54,13 @@ namespace LightPlatformer.UI
 
             var screen = worldCamera.WorldToScreenPoint(source.Anchor.position + Vector3.up * 0.9f);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screen, null, out var position);
-            position.x = Mathf.Clamp(position.x, canvas.rect.xMin + 74, canvas.rect.xMax - 74);
-            position.y = Mathf.Clamp(position.y, canvas.rect.yMin + 30, canvas.rect.yMax - 90);
+            var halfSize = root.rect.size * 0.5f;
+            position.x = Mathf.Clamp(position.x, canvas.rect.xMin + halfSize.x + 8, canvas.rect.xMax - halfSize.x - 8);
+            position.y = Mathf.Clamp(position.y, canvas.rect.yMin + halfSize.y + 8, canvas.rect.yMax - halfSize.y - 64);
             root.anchoredPosition = position;
             fill.anchorMax = new Vector2(Mathf.Clamp01(remaining / source.DurationSeconds), 1f);
-            int seconds = Mathf.CeilToInt(remaining);
-            if (seconds != shownSeconds) { label.text = "Lantern " + seconds + "s"; shownSeconds = seconds; }
             bool lowTime = remaining <= 1.5f;
             fillImage.color = lowTime ? Warning : new Color32(165, 234, 203, 255);
-            // Pulse only the border. The light stays on until its timer ends.
-            border.color = lowTime ? Color.Lerp(Frame, Warning, 0.65f + 0.2f * Mathf.Sin(Time.time * 5f)) : Frame;
             visibility.alpha = 1f;
         }
 
