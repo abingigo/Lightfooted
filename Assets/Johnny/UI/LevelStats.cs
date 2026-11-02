@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public static class LevelStats
 {
-    public static float AttemptSeconds { get; set; }
+    static IGameService Game => ServiceRegistry.TryGet(out IGameService game) ? game : null;
+
+    public static float AttemptSeconds => Game?.AttemptSeconds ?? 0f;
 
     public static bool CoinCollected { get; set; }
     public static int CoinsCollected => collectedCoins.Count;
@@ -16,31 +19,30 @@ public static class LevelStats
     static readonly HashSet<int> coins = new HashSet<int>();
     static readonly HashSet<int> collectedCoins = new HashSet<int>();
     static readonly HashSet<string> levelsWithCoin = new HashSet<string>();
-    static readonly Dictionary<string, int> deaths = new Dictionary<string, int>();
+    static IGameService watched;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()
     {
-        AttemptSeconds = 0f;
         CoinCollected = false;
         coins.Clear();
         collectedCoins.Clear();
         CoinProgressChanged = null;
         levelsWithCoin.Clear();
-        deaths.Clear();
+        watched = null;
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void WatchSceneChanges()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void WatchLevels()
     {
-        SceneManager.sceneLoaded -= SceneLoaded;
-        SceneManager.sceneLoaded += SceneLoaded;
+        var game = Game;
+        if (game == null || ReferenceEquals(game, watched)) return;
+        if (watched != null) watched.LevelStarted -= LevelStarted;
+        watched = game;
+        game.LevelStarted += LevelStarted;
     }
 
-    static void SceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (mode == LoadSceneMode.Single) ResetCoinProgress();
-    }
+    static void LevelStarted(Scene scene) => ResetCoinProgress();
 
     static void ResetCoinProgress()
     {
@@ -76,27 +78,19 @@ public static class LevelStats
 
     public static void RecordDeath(string level)
     {
-        deaths.TryGetValue(level, out int count);
-        deaths[level] = count + 1;
         CoinCollected = false;
     }
 
-    public static int DeathsIn(string level)
-    {
-        deaths.TryGetValue(level, out int count);
-        return count;
-    }
+    public static int DeathsIn(string level) => Game?.DeathsIn(level) ?? 0;
 
     public static void ClearLevel(string level)
     {
-        deaths.Remove(level);
         CoinCollected = false;
     }
 
     // Called whenever a level is (re)loaded.
     public static void StartAttempt()
     {
-        AttemptSeconds = 0f;
         ResetCoinProgress();
     }
 }

@@ -114,7 +114,6 @@ namespace LightPlatformer.UI
         void Update()
         {
             Bind();
-            if (State == MenuState.Playing) LevelStats.AttemptSeconds += Time.deltaTime;
             bool escape = Input.GetKeyDown(KeyCode.Escape);
             if (escape && view.CloseControls()) return;
             if (escape || Input.GetKeyDown(KeyCode.P))
@@ -162,7 +161,6 @@ namespace LightPlatformer.UI
         void RecordDeath(string cause)
         {
             string level = SceneManager.GetActiveScene().name;
-            CheckpointProgress.deathTimes++;
             LevelStats.RecordDeath(level);
 
             PlayerDeathContext ctx = PlayerDeathContext.Current;
@@ -181,18 +179,23 @@ namespace LightPlatformer.UI
         public bool Restart()
         {
             if (State == MenuState.LevelSelect || IsLoading) return false;
-            return LoadLevel(SceneManager.GetActiveScene().path);
+            return Request(SceneManager.GetActiveScene().path, game => game.Retry());
         }
 
         public bool RestartFromBeginning()
         {
-            CheckpointProgress.reachedCheckpoint = false;
-            return Restart();
+            if (State == MenuState.LevelSelect || IsLoading) return false;
+            return Request(SceneManager.GetActiveScene().path, game => game.RestartLevel());
         }
 
         public bool LoadLevel(string path)
         {
             if (IsLoading) return false;
+            return Request(path, game => game.LoadLevel(path));
+        }
+
+        bool Request(string path, Func<IGameService, bool> load)
+        {
             var level = LevelCatalog.ReadBuildLevels().Find(entry => entry.ScenePath == path);
             if (level == null || !Application.CanStreamedLevelBeLoaded(path))
             {
@@ -200,7 +203,7 @@ namespace LightPlatformer.UI
                 return false;
             }
             Bind();
-            if (Game == null || !Game.LoadLevel(path))
+            if (Game == null || !load(Game))
             {
                 ShowError("The level could not be opened. Please try again.");
                 return false;

@@ -173,31 +173,38 @@ namespace LightPlatformer.UI
         void RenderPauseOrResult(MenuState state)
         {
             Fill(canvas, new Color(0.035f, 0.05f, 0.065f, 0.93f), "Modal backdrop");
-            var panel = Box(canvas, "Pause and results", 464, 490, 0, 0, Panel);
-            mainContent = panel.gameObject;
-            Text(panel, "LIGHTFOOTED", 13, Accent, 0, 207, 400, 24);
 
             bool victory = state == MenuState.Victory;
             bool paused = state == MenuState.Paused;
-            bool hasSave = state == MenuState.GameOver && CheckpointProgress.HasCheckpointForScene(SceneManager.GetActiveScene().path);
-
-            Text(panel, paused ? "Take a breath" : victory ? "Level complete" : "Try again", 34, Color.white, 0, 158, 400, 50);
-            Text(panel, paused ? "Your game is paused." : victory ? "You found your way through." : "A new attempt starts with a little light.", 17, Muted, 0, 111, 400, 42);
+            bool hasSave = (paused || state == MenuState.GameOver) && CheckpointProgress.HasCheckpointForScene(SceneManager.GetActiveScene().path);
 
             int current = LevelCatalog.ReadBuildLevels().FindIndex(entry => entry.ScenePath == SceneManager.GetActiveScene().path);
             bool next = victory && current >= 0 && current + 1 < LevelCatalog.ReadBuildLevels().Count;
 
-            if (paused) Button(panel, "Resume game", 392, 48, 0, 43, controller.Resume, true);
-            else if (next) Button(panel, "Next level", 392, 48, 0, 43, () => controller.NextLevel(), true);
-            else Button(panel, victory ? "Play again" : hasSave ? "Respawn at checkpoint" : "Restart level", 392, 48, 0, 43, () => controller.Restart(), true);
+            var actions = new List<(string label, Action action)>();
+            if (paused) actions.Add(("Resume game", controller.Resume));
+            else if (next) actions.Add(("Next level", () => controller.NextLevel()));
+            else actions.Add((victory ? "Play again" : hasSave ? "Respawn at checkpoint" : "Restart level", () => controller.Restart()));
 
-            if (paused || next) Button(panel, "Restart level", 392, 48, 0, -17, () => controller.Restart());
-            else if (hasSave) Button(panel, "Restart from beginning", 392, 48, 0, -17, () => controller.RestartFromBeginning());
+            if (paused && hasSave) actions.Add(("Respawn at checkpoint", () => controller.Restart()));
+            if (hasSave) actions.Add(("Restart from beginning", () => controller.RestartFromBeginning()));
+            else if (paused || next) actions.Add(("Restart level", () => controller.Restart()));
+            actions.Add(("Level select", () => controller.GoToMenu()));
 
-            Button(panel, "Level select", 392, 48, 0, paused || next || hasSave ? -77 : -17, () => controller.GoToMenu());
-            Button(panel, "Controls", 392, 42, 0, paused || next || hasSave ? -134 : -77, ToggleControls);
-            Text(panel, paused ? "Esc or P to resume" : victory && !next ? "All available levels complete. Thanks for playing!" : state == MenuState.GameOver ? "Deaths: " + CheckpointProgress.deathTimes : "You can retry as often as you like.", 14, Muted, 0, -188, 400, 42);
-            errorText = Text(panel, "", 14, new Color32(255, 180, 168, 255), 0, -224, 416, 32);
+            float half = Mathf.Max(0, actions.Count - 3) * 30f;
+            var panel = Box(canvas, "Pause and results", 464, 490 + half * 2f, 0, 0, Panel);
+            mainContent = panel.gameObject;
+            Text(panel, "LIGHTFOOTED", 13, Accent, 0, half + 207, 400, 24);
+            Text(panel, paused ? "Take a breath" : victory ? "Level complete" : "Try again", 34, Color.white, 0, half + 158, 400, 50);
+            Text(panel, paused ? "Your game is paused." : victory ? "You found your way through." : "A new attempt starts with a little light.", 17, Muted, 0, half + 111, 400, 42);
+
+            float y = half + 43;
+            for (int i = 0; i < actions.Count; i++, y -= 60)
+                Button(panel, actions[i].label, 392, 48, 0, y, actions[i].action, i == 0);
+            Button(panel, "Controls", 392, 42, 0, y + 3, ToggleControls);
+
+            Text(panel, paused ? "Esc or P to resume  ·  Deaths: " + CheckpointProgress.deathTimes : victory && !next ? "All available levels complete. Thanks for playing!" : state == MenuState.GameOver ? "Deaths: " + CheckpointProgress.deathTimes : "You can retry as often as you like.", 14, Muted, 0, -half - 188, 400, 42);
+            errorText = Text(panel, "", 14, new Color32(255, 180, 168, 255), 0, -half - 224, 416, 32);
         }
 
         void RenderLoading()

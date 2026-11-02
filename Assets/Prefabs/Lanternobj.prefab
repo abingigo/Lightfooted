@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 822788931764808194}
   - component: {fileID: 2176318749868777587}
   - component: {fileID: 133791199702552224}
+  - component: {fileID: 7100000000000000004}
   m_Layer: 0
   m_Name: Lanternobj
   m_TagString: Light
@@ -206,3 +207,16 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &7100000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8365095246579516195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa6c02be42e4c3f8395fbdc4288ecc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LanternPickupState
+  id: 

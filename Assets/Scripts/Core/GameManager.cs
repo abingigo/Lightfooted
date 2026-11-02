@@ -8,10 +8,28 @@ namespace Core
 {
     public sealed class GameManager : Service<IGameService>, IGameService
     {
+        private sealed class Snapshot
+        {
+            public string ScenePath;
+            public Vector3 RespawnPoint;
+            public readonly Dictionary<string, string> States = new();
+            public readonly HashSet<string> Consumed = new();
+        }
+
         [Tooltip("Levels in play order. The level select and Next Level read this.")] [SerializeField]
         private LevelList levels;
 
+        [Tooltip("On death, skip the Game Over screen and retry at once (from the checkpoint if one was reached).")]
+        [SerializeField]
+        private bool instantRespawn = true;
+
         private readonly List<string> playable = new();
+        private readonly List<KeyValuePair<string, CheckpointState>> inventory = new();
+        private readonly List<CheckpointState> found = new();
+        private readonly HashSet<string> ids = new();
+        private readonly Dictionary<string, int> levelDeaths = new();
+        private Snapshot snapshot;
+        private bool restoreOnLoad;
         private bool inLevel;
         private bool loading;
         private int resumeFrame;
@@ -21,11 +39,21 @@ namespace Core
         public Scene CurrentLevel { get; private set; }
         public LevelList Levels => levels;
 
+        public bool HasCheckpoint => snapshot != null;
+        public string CheckpointScene => snapshot?.ScenePath;
+        public Vector3 CheckpointPosition => snapshot?.RespawnPoint ?? Vector3.zero;
+        public bool HasCheckpointFor(string scenePath) => snapshot != null && snapshot.ScenePath == scenePath;
+
+        public int SessionDeaths { get; private set; }
+        public int DeathsIn(string level) => levelDeaths.TryGetValue(level, out int count) ? count : 0;
+        public float AttemptSeconds { get; private set; }
+
         public event Action<GameState, GameState> StateChanged;
         public event Action<Scene> LevelStarted;
         public event Action<Scene> LevelEnded;
         public event Action<string> DeathReported;
         public event Action GoalReached;
+        public event Action<Vector3> Respawned;
         public event Action<float> LoadingProgress;
 
         private string MenuPath =>
@@ -53,7 +81,9 @@ namespace Core
 
         private void Update()
         {
-            if (State == GameState.Playing && Time.timeScale == 0f) Pause();
+            if (State != GameState.Playing) return;
+            if (Time.timeScale == 0f) Pause();
+            else AttemptSeconds += Time.deltaTime;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -63,28 +93,23 @@ namespace Core
                 manager.StartLevel(SceneManager.GetActiveScene());
         }
 
-        public bool LoadLevel(string scenePath)
-        {
-            if (loading || string.IsNullOrEmpty(scenePath) || !Application.CanStreamedLevelBeLoaded(scenePath))
-                return false;
-            StartCoroutine(Load(scenePath));
-            return true;
-        }
+        public bool LoadLevel(string scenePath) => StartLoad(scenePath, false);
 
         public bool NextLevel()
         {
             if (State != GameState.Victory) return false;
             var levelPaths = PlayableLevels();
             int current = levelPaths.IndexOf(SceneManager.GetActiveScene().path);
-            return current >= 0 && current + 1 < levelPaths.Count && LoadLevel(levelPaths[current + 1]);
+            return current >= 0 && current + 1 < levelPaths.Count && StartLoad(levelPaths[current + 1], false);
         }
 
-        public bool GoToMenu() => LoadLevel(MenuPath);
+        public bool GoToMenu() => StartLoad(MenuPath, false);
 
-        public bool Retry() =>
-            State != GameState.Menu && State != GameState.Loading && LoadLevel(SceneManager.GetActiveScene().path);
+        public bool Retry() => CanReload() && StartLoad(SceneManager.GetActiveScene().path, true);
 
-        public bool RestartLevel() => Retry();
+        public bool RestartLevel() => CanReload() && StartLoad(SceneManager.GetActiveScene().path, false);
+
+        public void DiscardCheckpoint() => snapshot = null;
 
         public bool Pause()
         {
@@ -103,8 +128,12 @@ namespace Core
         public bool ReportDeath(string cause)
         {
             if (State != GameState.Playing) return false;
+            string level = SceneManager.GetActiveScene().name;
+            SessionDeaths++;
+            levelDeaths[level] = DeathsIn(level) + 1;
             DeathReported?.Invoke(cause);
             SetState(GameState.GameOver);
+            if (instantRespawn) Retry();
             return true;
         }
 
@@ -112,7 +141,36 @@ namespace Core
         {
             if (State != GameState.Playing) return false;
             GoalReached?.Invoke();
+            levelDeaths.Remove(SceneManager.GetActiveScene().name);
+            snapshot = null;
             SetState(GameState.Victory);
+            return true;
+        }
+
+        public bool ReportCheckpoint(Vector3 respawnPoint)
+        {
+            if (State != GameState.Playing || !inLevel) return false;
+
+            snapshot = new Snapshot { ScenePath = CurrentLevel.path, RespawnPoint = respawnPoint };
+            foreach (var entry in inventory)
+            {
+                if (entry.Value == null) snapshot.Consumed.Add(entry.Key);
+                else snapshot.States[entry.Key] = entry.Value.Capture();
+            }
+
+            return true;
+        }
+
+        private bool CanReload() => State != GameState.Menu && State != GameState.Loading;
+
+        private bool StartLoad(string scenePath, bool restore)
+        {
+            if (loading || string.IsNullOrEmpty(scenePath) || !Application.CanStreamedLevelBeLoaded(scenePath))
+                return false;
+
+            restoreOnLoad = restore && HasCheckpointFor(scenePath);
+            if (!restoreOnLoad) snapshot = null;
+            StartCoroutine(Load(scenePath));
             return true;
         }
 
@@ -139,6 +197,7 @@ namespace Core
         private IEnumerator Load(string scenePath)
         {
             loading = true;
+            AttemptSeconds = 0f;
             SetState(GameState.Loading);
             if (inLevel) EndLevel();
 
@@ -147,6 +206,7 @@ namespace Core
             {
                 Debug.LogError($"GameManager: could not load '{scenePath}'.", this);
                 loading = false;
+                restoreOnLoad = false;
                 StartLevel(SceneManager.GetActiveScene());
                 yield break;
             }
@@ -178,10 +238,52 @@ namespace Core
                 if (inLevel) EndLevel();
                 CurrentLevel = scene;
                 inLevel = true;
+                TakeInventory(scene);
+
+                bool restoring = restoreOnLoad && HasCheckpointFor(scene.path);
+                restoreOnLoad = false;
+                if (!restoring) snapshot = null;
+
                 LevelStarted?.Invoke(scene);
+                if (restoring) RestoreSnapshot();
             }
 
             SetState(scene.path == MenuPath ? GameState.Menu : GameState.Playing, true);
+        }
+
+        private void TakeInventory(Scene scene)
+        {
+            inventory.Clear();
+            ids.Clear();
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                root.GetComponentsInChildren(true, found);
+                foreach (var state in found)
+                {
+                    if (string.IsNullOrEmpty(state.Id) || !ids.Add(state.Id))
+                    {
+                        Debug.LogWarning(
+                            $"GameManager: '{state.name}' has a missing or duplicate checkpoint ID and won't be saved. Run Lightfooted > Assign Checkpoint IDs In Build Levels.",
+                            state);
+                        continue;
+                    }
+
+                    inventory.Add(new KeyValuePair<string, CheckpointState>(state.Id, state));
+                }
+            }
+
+            found.Clear();
+        }
+
+        private void RestoreSnapshot()
+        {
+            foreach (var entry in inventory)
+            {
+                if (snapshot.Consumed.Contains(entry.Key)) entry.Value.RestoreConsumed();
+                else if (snapshot.States.TryGetValue(entry.Key, out var data)) entry.Value.Restore(data);
+            }
+
+            Respawned?.Invoke(snapshot.RespawnPoint);
         }
 
         private void EndLevel()
@@ -189,6 +291,7 @@ namespace Core
             var ended = CurrentLevel;
             CurrentLevel = default;
             inLevel = false;
+            inventory.Clear();
             LevelEnded?.Invoke(ended);
         }
 

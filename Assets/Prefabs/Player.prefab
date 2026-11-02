@@ -315,9 +315,10 @@ GameObject:
   - component: {fileID: 3678564207102497089}
   - component: {fileID: 7346150036527251405}
   - component: {fileID: 6982360337933424085}
-  - component: {fileID: 4870079878230462150}
   - component: {fileID: 9185585990969153716}
   - component: {fileID: 8275210967138653454}
+  - component: {fileID: 7100000000000000001}
+  - component: {fileID: 7100000000000000002}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -620,18 +621,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StripGraceOnMove
   exposure: {fileID: 3678564207102497089}
---- !u!114 &4870079878230462150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251545105464418845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da0cd7bb8a974e8aa0a5fc34a2496c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LightPlatformer.UI::CheckpointProgress
 --- !u!58 &9185585990969153716
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1225,3 +1214,29 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &7100000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095d3fbffb954a9cb789fa7fea8b37f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLoadoutState
+  id: 
+  lantern: {fileID: 4031485824179340207}
+--- !u!114 &7100000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757fd87f185b4648b66b41a48206997b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheckpointRespawn
