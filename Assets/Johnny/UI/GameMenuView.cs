@@ -149,7 +149,7 @@ namespace LightPlatformer.UI
         {
             var bar = Box(canvas, "Gameplay menu", 920, 44, 0, 0);
             bar.anchorMin = bar.anchorMax = new Vector2(0.5f, 1); bar.anchoredPosition = new Vector2(0, -32);
-            var scene = new LevelEntry(SceneManager.GetActiveScene().path);
+            var scene = LevelCatalog.Describe(SceneManager.GetActiveScene().path);
             Text(bar, scene.Title, 16, Color.white, -330, 0, 240, 36);
             var coins = Text(bar, "", 16, Accent, 0, 0, 200, 36);
             coins.gameObject.name = "Coin counter";

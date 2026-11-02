@@ -6,7 +6,12 @@ namespace Core
 {
     public sealed class GameManager : Service<IGameService>, IGameService
     {
+        [Tooltip("Levels in play order. The level select and Next Level read this.")] [SerializeField]
+        private LevelList levels;
+
         private bool inLevel;
+
+        public LevelList Levels => levels;
 
         public Scene CurrentLevel { get; private set; }
 

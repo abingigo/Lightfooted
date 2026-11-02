@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706288d2fdc6d7746ae8970a30b5267c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Lightfooted.Core::Core.GameManager
+  levels: {fileID: 11400000, guid: 16c70b6dc37747f6bc83d9b5d86c1fc9, type: 2}
 --- !u!114 &5318470296150847562
 MonoBehaviour:
   m_ObjectHideFlags: 0
