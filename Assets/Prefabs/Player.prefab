@@ -618,9 +618,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fc5d457dbdb2fc47b219f3054ea3cfd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DashLightGrace
+  m_EditorClassIdentifier: Assembly-CSharp::StripGraceOnMove
   exposure: {fileID: 3678564207102497089}
-  graceAfterDash: 15
 --- !u!114 &4870079878230462150
 MonoBehaviour:
   m_ObjectHideFlags: 0
