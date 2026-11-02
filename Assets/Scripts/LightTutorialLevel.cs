@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using LightPlatformer.UI;
+using TMPro;
 
 // Scene-specific rules for the battery and throwable-light teaching level.
 public class LightTutorialLevel : MonoBehaviour
@@ -7,15 +9,20 @@ public class LightTutorialLevel : MonoBehaviour
     [SerializeField] float cameraSmoothSpeed = 6f;
     [SerializeField] Vector2 goalPosition = new Vector2(4.3f, 7.25f);
     [SerializeField] float goalRadius = 0.85f;
+    [SerializeField] TMP_FontAsset hintFont;
 
     PlayerController player;
     Camera sceneCamera;
     BatteryPoweredLight batteryLight;
     ThrowableLight throwableLight;
     Collider2D[] steps;
+    Collider2D[] sceneColliders;
     bool[] unlocked;
     bool batteryUsed;
     bool completed;
+    TextMeshProUGUI hintText;
+    RectTransform hintRect;
+    bool? hintUsesDarkText;
 
     void Start()
     {
@@ -23,6 +30,7 @@ public class LightTutorialLevel : MonoBehaviour
         batteryLight = FindFirstObjectByType<BatteryPoweredLight>();
         throwableLight = FindFirstObjectByType<ThrowableLight>();
         sceneCamera = Camera.main;
+        sceneColliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
 
         steps = new Collider2D[3];
         unlocked = new bool[3];
@@ -35,6 +43,8 @@ public class LightTutorialLevel : MonoBehaviour
         if (player == null || batteryLight == null || throwableLight == null || sceneCamera == null ||
             steps[0] == null || steps[1] == null || steps[2] == null)
             Debug.LogError("LightTutorialLevel: a required player, light, platform, or camera is missing.", this);
+
+        CreateHint();
     }
 
     void Update()
@@ -44,7 +54,8 @@ public class LightTutorialLevel : MonoBehaviour
             Restart();
             return;
         }
-        if (player == null || batteryLight == null || throwableLight == null) return;
+        if (player == null || batteryLight == null || throwableLight == null ||
+            GameMenuController.Instance == null || GameMenuController.Instance.State != MenuState.Playing) return;
 
         batteryUsed |= batteryLight.HasBattery;
 
@@ -69,7 +80,7 @@ public class LightTutorialLevel : MonoBehaviour
             Vector2.Distance(player.transform.position, goalPosition) < goalRadius)
         {
             completed = true;
-            Time.timeScale = 0f;
+            GameMenuController.NotifyVictory();
         }
     }
 
@@ -97,6 +108,34 @@ public class LightTutorialLevel : MonoBehaviour
         Vector3 desired = new Vector3(0f, Mathf.Clamp(player.transform.position.y + 1.2f, 2f, 5.5f), -10f);
         sceneCamera.transform.position = Vector3.Lerp(sceneCamera.transform.position, desired,
             cameraSmoothSpeed * Time.unscaledDeltaTime);
+        UpdateHint();
+    }
+
+    void CreateHint()
+    {
+        GameObject canvasObject = new GameObject("Tutorial hints", typeof(RectTransform), typeof(Canvas));
+        canvasObject.transform.SetParent(transform, false);
+        Canvas canvas = canvasObject.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 500;
+
+        GameObject textObject = new GameObject("Hint", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textObject.transform.SetParent(canvasObject.transform, false);
+        hintRect = textObject.GetComponent<RectTransform>();
+        hintRect.anchorMin = hintRect.anchorMax = new Vector2(0f, 1f);
+        hintRect.pivot = new Vector2(0f, 1f);
+        hintRect.sizeDelta = new Vector2(500f, 72f);
+        hintText = textObject.GetComponent<TextMeshProUGUI>();
+        hintText.font = hintFont != null ? hintFont : TMP_Settings.defaultFontAsset;
+        hintText.fontSize = 25f;
+        hintText.fontStyle = FontStyles.Normal;
+        hintText.color = Color.white;
+        hintText.outlineColor = Color.black;
+        hintText.outlineWidth = 0.18f;
+        hintText.alignment = TextAlignmentOptions.TopLeft;
+        hintText.enableWordWrapping = true;
+        hintText.raycastTarget = false;
+        hintText.enabled = false;
     }
 
     void Restart()
@@ -105,37 +144,96 @@ public class LightTutorialLevel : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    void OnGUI()
+    void UpdateHint()
     {
-        if (player == null || batteryLight == null || throwableLight == null) return;
+        if (hintText == null) return;
+        if (player == null || batteryLight == null || throwableLight == null ||
+            sceneCamera == null || GameMenuController.Instance == null ||
+            GameMenuController.Instance.State != MenuState.Playing || steps == null ||
+            steps[0] == null || steps[1] == null || steps[2] == null)
+        {
+            hintText.enabled = false;
+            return;
+        }
 
         string instruction;
-        if (completed) instruction = "LEVEL COMPLETE!  Press T to replay.";
-        else if (!batteryLight.HasBattery) instruction = "R: pick up the battery. Press R again beside the blue lamp.";
-        else if (!throwableLight.HasBeenThrown && !throwableLight.IsCarried)
-            instruction = "E: pick up the orange light near the start.";
-        else if (player.transform.position.y < 1.7f) instruction = "Battery light powers Step 1. Use A/D and Space to jump.";
-        else if (!unlocked[1])
-            instruction = "Q: throw the light toward Step 2. It lights the dark platform.";
-        else if (player.transform.position.y < 3.7f)
-            instruction = "Jump to Step 2, then press E to catch the light again.";
-        else if (!unlocked[2])
-            instruction = "E: catch the light again. Q: throw it toward Step 3.";
-        else if (player.transform.position.y < 5.8f)
-            instruction = "Jump to the lit Step 3.";
-        else instruction = "Reach the green goal on the highest platform.";
-
-        GUI.Box(new Rect(14f, 14f, 660f, 72f), "LIGHT TUTORIAL");
-        GUI.Label(new Rect(28f, 40f, 630f, 22f), instruction);
-        GUI.Label(new Rect(28f, 62f, 630f, 20f), "A/D move  |  Space jump  |  E catch  |  Q throw  |  R battery  |  T restart");
-
-        if (sceneCamera == null) return;
-        for (int i = 0; i < steps.Length; i++)
+        Vector3 hintPosition;
+        if (!batteryLight.HasBattery)
         {
-            if (steps[i] == null) continue;
-            Vector3 screen = sceneCamera.WorldToScreenPoint(steps[i].transform.position + Vector3.up * 0.65f);
-            if (screen.z > 0f)
-                GUI.Label(new Rect(screen.x - 32f, Screen.height - screen.y, 80f, 22f), "STEP " + (i + 1));
+            BatteryItem battery = FindFirstObjectByType<BatteryItem>();
+            bool carried = battery != null && !battery.IsAvailable;
+            instruction = carried ? "Press R beside the blue lamp." : "Press R to pick up the battery.";
+            hintPosition = carried ? batteryLight.transform.position :
+                battery != null ? battery.transform.position : player.transform.position;
         }
+        else if (!throwableLight.HasBeenThrown && !throwableLight.IsCarried)
+        {
+            instruction = "Press E to pick up the orange light.";
+            hintPosition = throwableLight.transform.position;
+        }
+        else if (player.transform.position.y < 1.7f)
+        {
+            instruction = "Use A/D and Space to jump onto the lit platform.";
+            hintPosition = steps[0].transform.position;
+        }
+        else if (!unlocked[1])
+        {
+            instruction = "Press Q to throw the light toward this platform.";
+            hintPosition = steps[1].transform.position;
+        }
+        else if (player.transform.position.y < 3.7f)
+        {
+            instruction = "Jump across, then press E to catch the light.";
+            hintPosition = steps[1].transform.position;
+        }
+        else if (!unlocked[2])
+        {
+            instruction = "Catch with E, then throw with Q toward this platform.";
+            hintPosition = steps[2].transform.position;
+        }
+        else if (player.transform.position.y < 5.8f)
+        {
+            instruction = "Jump to the highest lit platform.";
+            hintPosition = steps[2].transform.position;
+        }
+        else
+        {
+            instruction = "Reach the green goal.";
+            hintPosition = goalPosition;
+        }
+
+        Vector3 screen = sceneCamera.WorldToScreenPoint(hintPosition + Vector3.up * 0.9f);
+        if (screen.z <= 0f || screen.y < 0f || screen.y > Screen.height)
+        {
+            hintText.enabled = false;
+            return;
+        }
+        const float width = 500f;
+        const float height = 72f;
+        float x = Mathf.Clamp(screen.x - width * 0.5f, 8f, Mathf.Max(8f, Screen.width - width - 8f));
+        float y = Mathf.Clamp(Screen.height - screen.y - height, 100f, Screen.height - height - 8f);
+        hintRect.anchoredPosition = new Vector2(x, -y);
+        bool brightBackground = IsHintOverLight(x, y, width, height, screen.z);
+        if (hintUsesDarkText != brightBackground)
+        {
+            hintText.color = brightBackground ? new Color(0.06f, 0.08f, 0.13f) : Color.white;
+            hintText.outlineColor = brightBackground ? Color.white : Color.black;
+            hintUsesDarkText = brightBackground;
+        }
+        hintText.text = instruction;
+        hintText.enabled = true;
+    }
+
+    bool IsHintOverLight(float x, float y, float width, float height, float depth)
+    {
+        float screenY = Screen.height - y - height * 0.5f;
+        for (int i = 0; i < 3; i++)
+        {
+            float screenX = x + width * (0.15f + i * 0.3f);
+            Vector3 world = sceneCamera.ScreenToWorldPoint(new Vector3(screenX, screenY, depth));
+            foreach (Collider2D hit in sceneColliders)
+                if (hit != null && hit.enabled && hit.CompareTag("Light") && hit.OverlapPoint(world)) return true;
+        }
+        return false;
     }
 }
