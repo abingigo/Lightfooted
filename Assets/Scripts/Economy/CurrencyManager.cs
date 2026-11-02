@@ -12,13 +12,8 @@ namespace Economy
         private readonly Dictionary<CurrencyType, int> balances = new();
         public event Action<CurrencyType, int> BalanceChanged;
 
-        private void OnEnable()  => SceneManager.sceneLoaded += OnSceneLoaded;
-        private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (mode == LoadSceneMode.Additive) return;
-            ResetBalances(CurrencyLifetime.PerLevel);
-        }
+        protected override void OnLevelStarted(Scene level) => ResetBalances(CurrencyLifetime.PerLevel);
+
         public int GetBalance(CurrencyType currency) =>
             currency != null && balances.TryGetValue(currency, out var balance) ? balance : 0;
 

@@ -233,7 +233,7 @@ Transform:
   m_GameObject: {fileID: 2687035301065242995}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.35, z: 0}
+  m_LocalPosition: {x: 0, y: -0.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -274,7 +274,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.8, y: 0.3}
+  m_Size: {x: 1, y: 0.3}
   m_Direction: 1
 --- !u!114 &2512299202104545596
 MonoBehaviour:
@@ -512,10 +512,12 @@ MonoBehaviour:
     m_Bits: 64
   groundCheck: {fileID: 3914076840807864546}
   groundCheckRadius: 0.15
+  groundCheckSize: {x: 0.9, y: 0.1}
   isDashing: 0
   dashSpeed: 40
   dashDuration: 0.15
   dashCooldown: 10
+  holdDashHeight: 1
 --- !u!114 &1892863442499197113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1003,7 +1005,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.8, y: 0.3}
+  m_Size: {x: 0.9, y: 0.3}
   m_Direction: 1
 --- !u!114 &8812048528970984828
 MonoBehaviour:

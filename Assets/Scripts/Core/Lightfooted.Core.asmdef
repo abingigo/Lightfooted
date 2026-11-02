@@ -1,0 +1,6 @@
+{
+  "name": "Lightfooted.Core",
+  "rootNamespace": "Core",
+  "references": [],
+  "autoReferenced": true
+}

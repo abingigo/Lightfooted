@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Core;
 
 namespace Lighting
@@ -26,6 +27,7 @@ namespace Lighting
 
         private readonly List<LightExposure> exposures = new();
         private readonly List<LightExposure> changed = new();
+        private readonly List<Collider2D> deadAreas = new();
 
         protected override void Awake()
         {
@@ -100,6 +102,18 @@ namespace Lighting
                 if (sourcesByArea.TryGetValue(hit, out var source) && source.Profile.TryGet(out effect))
                     return true;
             return false;
+        }
+
+        protected override void OnLevelEnded(Scene level)
+        {
+            exposures.RemoveAll(exposure => exposure == null);
+
+            deadAreas.Clear();
+            foreach (var pair in sourcesByArea)
+                if (pair.Key == null || pair.Value == null)
+                    deadAreas.Add(pair.Key);
+            foreach (var area in deadAreas) sourcesByArea.Remove(area);
+            deadAreas.Clear();
         }
 
         protected override void OnDestroy()

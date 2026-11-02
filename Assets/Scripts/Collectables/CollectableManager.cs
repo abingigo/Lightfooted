@@ -2,6 +2,7 @@
 using Core;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 namespace Collectables
 {
@@ -15,6 +16,8 @@ namespace Collectables
 
         private readonly Dictionary<Collectable, ObjectPool<Collectable>>
             owners = new(); // live instance → pool it came from
+
+        private readonly List<Collectable> deadInstances = new();
 
         public Collectable Spawn(CollectDefinition definition, Vector3 position, Transform parent = null)
         {
@@ -82,6 +85,16 @@ namespace Collectables
 
             pools.Add(prefab, pool);
             return pool;
+        }
+
+        protected override void OnLevelEnded(Scene level)
+        {
+            deadInstances.Clear();
+            foreach (var instance in owners.Keys)
+                if (instance == null)
+                    deadInstances.Add(instance);
+            foreach (var instance in deadInstances) owners.Remove(instance);
+            deadInstances.Clear();
         }
 
         protected override void OnDestroy()
