@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Johnny/LightPlatformLab.unity
     guid: 2d3772ed12f8fbe4c9ec333daf1a7d79
   - enabled: 0
-    path: Assets/Scenes/Old Level 1.unity
+    path: Assets/Scenes/Deprecated/Old Level 1.unity
     guid: d09412801e1314ed6994fcade8fcdced
   - enabled: 1
     path: Assets/Scenes/Level 1.unity
