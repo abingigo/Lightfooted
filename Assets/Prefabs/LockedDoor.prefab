@@ -1,66 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1734405596822751001
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-      propertyPath: m_Name
-      value: LockedDoor
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8328446503165193710, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4718265930147582910}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2471583926104758301}
-  m_SourcePrefab: {fileID: 100100000, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
---- !u!1 &6349491167845438097 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-  m_PrefabInstance: {fileID: 1734405596822751001}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7747683690814155511 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8328446503165193710, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-  m_PrefabInstance: {fileID: 1734405596822751001}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &6225590815905339467 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 5653254962858762066, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
-  m_PrefabInstance: {fileID: 1734405596822751001}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2471583926104758301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6349491167845438097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d0910936f124491b90895be06b10bfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Economy.KeyLock
-  id: 
-  key: {fileID: 11400000, guid: 30b6029d8f7c4ffaac00a552285e0410, type: 2}
-  required: 0
-  consumeKeys: 0
-  lockedComponents:
-  - {fileID: 6225590815905339467}
-  lockedObjects: []
-  label: {fileID: 6940281573920461835}
-  onUnlocked:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &3592847105638291472
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +116,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4285779967
   m_fontColor: {r: 1, g: 0.8117647, b: 0.4509804, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -256,3 +195,168 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeepWorldScale
   worldScale: {x: 1, y: 1, z: 1}
+--- !u!1001 &1734405596822751001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+      propertyPath: m_Name
+      value: LockedDoor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8328446503165193710, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4718265930147582910}
+    - targetCorrespondingSourceObject: {fileID: 8328446503165193710, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2389789029346012950}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2471583926104758301}
+  m_SourcePrefab: {fileID: 100100000, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+--- !u!61 &6225590815905339467 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5653254962858762066, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+  m_PrefabInstance: {fileID: 1734405596822751001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6349491167845438097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4615121030409196936, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+  m_PrefabInstance: {fileID: 1734405596822751001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2471583926104758301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6349491167845438097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d0910936f124491b90895be06b10bfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Economy.KeyLock
+  id: 
+  key: {fileID: 11400000, guid: 30b6029d8f7c4ffaac00a552285e0410, type: 2}
+  required: 0
+  consumeKeys: 0
+  lockedComponents:
+  - {fileID: 6225590815905339467}
+  lockedObjects: []
+  shownWhileLocked:
+  - {fileID: 802053056757438652}
+  label: {fileID: 6940281573920461835}
+  onUnlocked:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &7747683690814155511 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8328446503165193710, guid: b55ebf59e68d240aea0da7b9dd610b71, type: 3}
+  m_PrefabInstance: {fileID: 1734405596822751001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9062852846783304824
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7747683690814155511}
+    m_Modifications:
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.12282748
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.46134
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.213
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8567200698123619524, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      propertyPath: m_Name
+      value: LockedDecal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8567200698123619524, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4539071624851973440}
+  m_SourcePrefab: {fileID: 100100000, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+--- !u!4 &2389789029346012950 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6696717201126423406, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+  m_PrefabInstance: {fileID: 9062852846783304824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &802053056757438652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8567200698123619524, guid: c4b7329151502cf4299682c8ebe385b3, type: 3}
+  m_PrefabInstance: {fileID: 9062852846783304824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4539071624851973440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802053056757438652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a727036fbef44adb27d6e5b6c88538d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeepWorldScale
+  worldScale: {x: 0.46, y: 0.46, z: 0.46}

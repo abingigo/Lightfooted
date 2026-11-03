@@ -25,6 +25,9 @@ namespace Economy
         [Tooltip("Objects kept inactive while locked.")]
         [SerializeField] private GameObject[] lockedObjects = { };
 
+        [Tooltip("Objects shown while locked and hidden once unlocked, e.g. a lock decal.")]
+        [SerializeField] private GameObject[] shownWhileLocked = { };
+
         [Tooltip("Optional label showing \"Keys x/N\" while locked.")]
         [SerializeField] private TMP_Text label;
 
@@ -90,6 +93,8 @@ namespace Economy
                 if (component != null) component.enabled = open;
             foreach (var target in lockedObjects)
                 if (target != null) target.SetActive(open);
+            foreach (var target in shownWhileLocked)
+                if (target != null) target.SetActive(!open);
         }
 
         private int KeysPlacedInLevel()
