@@ -36,11 +36,11 @@ public class Victory : MonoBehaviour
     void Update()
     {
         if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked) return;
-    enterText.SetActive(playerAtDoor && isDoorOpen && !levelEnded);
+        if (enterText != null) enterText.SetActive(playerAtDoor && isDoorOpen && !levelEnded);
         if (!levelEnded && playerAtDoor && isDoorOpen && Input.GetKeyDown(KeyCode.E))
         {
             levelEnded = true;
-            enterText.SetActive(false);
+            if (enterText != null) enterText.SetActive(false);
             LightPlatformer.UI.GameMenuController.NotifyVictory();
             
         
@@ -51,6 +51,13 @@ public class Victory : MonoBehaviour
 
     IEnumerator OpenDoor()
     {
+        if (doorDash == null)
+        {
+            isOpening = false;
+            isDoorOpen = true;
+            yield break;
+        }
+
         Vector3 startPos = doorDash.localPosition;
         Vector3 startScale = doorDash.localScale;
         float halfDoorWidth = doorDash.GetComponent<SpriteRenderer>().sprite.bounds.size.x
