@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask;
     public Transform groundCheck;
     public float groundCheckRadius = 0.15f;
+    [Tooltip("If set, the ground check is a box of this size instead of a circle. Match the feet's width.")]
+    public Vector2 groundCheckSize;
 
     Rigidbody2D rb;
     bool isGrounded;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed = 10f;
     [SerializeField] private float dashDuration = 1f;
     [SerializeField] private float dashCooldown = 1f;
+    [Tooltip("Cancel gravity while dashing so the dash stays level instead of sinking each physics step.")]
+    [SerializeField] private bool holdDashHeight;
 
     bool jumpQueued;
     bool dashQueued;
@@ -43,7 +47,9 @@ public class PlayerController : MonoBehaviour
             ClearQueuedInput();
             return;
         }
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
+        isGrounded = groundCheckSize.x > 0f && groundCheckSize.y > 0f
+            ? Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundMask)
+            : Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = 0;
@@ -112,6 +118,7 @@ public class PlayerController : MonoBehaviour
             Vector2 v = rb.linearVelocity;
             v.y = 0f;
             rb.linearVelocity = v;
+            if (holdDashHeight) rb.AddForce(-Physics2D.gravity * (rb.gravityScale * rb.mass), ForceMode2D.Force);
             return;
         }
 
@@ -151,5 +158,15 @@ public class PlayerController : MonoBehaviour
     private void ResetCooldown()
     {
         isCoolDownReady = true;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null) return;
+        Gizmos.color = !Application.isPlaying ? Color.yellow : isGrounded ? Color.green : Color.red;
+        if (groundCheckSize.x > 0f && groundCheckSize.y > 0f)
+            Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
+        else
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

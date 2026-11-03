@@ -1,53 +1,130 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 using Core;
 
 namespace Economy
 {
     public class CurrencyManager : Service<ICurrencyService>, ICurrencyService
     {
-        private readonly Dictionary<CurrencyType, int> balances = new();
+        [Serializable]
+        private struct Entry
+        {
+            public string currency;
+            public int amount;
+        }
+
+        [Serializable]
+        private struct Earnings
+        {
+            public List<Entry> entries;
+        }
+
+        private readonly Dictionary<CurrencyType, int> wallet = new();
+        private readonly Dictionary<CurrencyType, int> earned = new();
+        private readonly Dictionary<string, CurrencyType> known = new();
+        private readonly List<CurrencyType> changed = new();
+        private IGameService game;
+
         public event Action<CurrencyType, int> BalanceChanged;
 
-        private void OnEnable()  => SceneManager.sceneLoaded += OnSceneLoaded;
-        private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        protected override void Start()
         {
-            if (mode == LoadSceneMode.Additive) return;
-            ResetBalances(CurrencyLifetime.PerLevel);
+            base.Start();
+            if (ServiceRegistry.TryGet(out game)) game.GoalReached += CommitLevel;
         }
+
+        protected override void OnDestroy()
+        {
+            if (game != null) game.GoalReached -= CommitLevel;
+            base.OnDestroy();
+        }
+
+        protected override void OnLevelStarted(Scene level) => DiscardLevel();
+
         public int GetBalance(CurrencyType currency) =>
-            currency != null && balances.TryGetValue(currency, out var balance) ? balance : 0;
+            currency == null ? 0 : Get(wallet, currency) + Get(earned, currency);
+
+        public int GetLevelEarnings(CurrencyType currency) => currency == null ? 0 : Get(earned, currency);
 
         public void Add(CurrencyType currency, int amount)
         {
             if (currency == null || amount <= 0) return;
-            SetBalance(currency, GetBalance(currency) + amount);
+            Remember(currency);
+            earned[currency] = Get(earned, currency) + amount;
+            Raise(currency);
         }
 
         public bool TrySpend(CurrencyType currency, int amount)
         {
-            if (currency == null || amount <= 0) return false;
-            var balance = GetBalance(currency);
-            if (balance < amount) return false;
-            SetBalance(currency, balance - amount);
+            if (currency == null || amount <= 0 || GetBalance(currency) < amount) return false;
+            Remember(currency);
+            earned[currency] = Get(earned, currency) - amount;
+            Raise(currency);
             return true;
         }
 
-        void SetBalance(CurrencyType currency, int value)
-        {
-            balances[currency] = value;
-            BalanceChanged?.Invoke(currency, value);
-        }
         public void ResetBalances(CurrencyLifetime lifetime)
         {
-            var toReset = balances.Keys.Where(currency => currency.Lifetime == lifetime).ToList();
-
-            foreach (var currency in toReset)
-                SetBalance(currency, 0);
+            changed.Clear();
+            foreach (var currency in known.Values)
+                if (currency.Lifetime == lifetime && (wallet.Remove(currency) | earned.Remove(currency)))
+                    changed.Add(currency);
+            foreach (var currency in changed) Raise(currency);
         }
+
+        public string CaptureLevelEarnings()
+        {
+            var data = new Earnings { entries = new List<Entry>() };
+            foreach (var pair in earned) data.entries.Add(new Entry { currency = pair.Key.name, amount = pair.Value });
+            return JsonUtility.ToJson(data);
+        }
+
+        public void RestoreLevelEarnings(string data)
+        {
+            DiscardLevel();
+            var restored = JsonUtility.FromJson<Earnings>(data);
+            if (restored.entries == null) return;
+            foreach (var entry in restored.entries)
+            {
+                if (!known.TryGetValue(entry.currency, out var currency)) continue;
+                earned[currency] = entry.amount;
+                Raise(currency);
+            }
+        }
+
+        private void CommitLevel()
+        {
+            changed.Clear();
+            foreach (var pair in earned)
+                if (pair.Key.Lifetime == CurrencyLifetime.Persistent)
+                    changed.Add(pair.Key);
+            foreach (var currency in changed)
+            {
+                wallet[currency] = Get(wallet, currency) + earned[currency];
+                earned.Remove(currency);
+            }
+        }
+
+        private void DiscardLevel()
+        {
+            changed.Clear();
+            changed.AddRange(earned.Keys);
+            earned.Clear();
+            foreach (var currency in changed) Raise(currency);
+        }
+
+        private void Remember(CurrencyType currency)
+        {
+            if (known.TryGetValue(currency.name, out var existing) && existing != currency)
+                Debug.LogWarning($"CurrencyManager: two currencies are named '{currency.name}'; checkpoints can't tell them apart.", currency);
+            known[currency.name] = currency;
+        }
+
+        private void Raise(CurrencyType currency) => BalanceChanged?.Invoke(currency, GetBalance(currency));
+
+        private static int Get(Dictionary<CurrencyType, int> source, CurrencyType currency) =>
+            source.TryGetValue(currency, out int value) ? value : 0;
     }
 }

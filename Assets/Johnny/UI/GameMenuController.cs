@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -13,14 +13,16 @@ namespace LightPlatformer.UI
     public sealed class GameMenuController : MonoBehaviour
     {
         public static GameMenuController Instance { get; private set; }
-        public static bool GameplayInputBlocked => Instance != null && (Instance.State != MenuState.Playing || Time.frameCount <= Instance.inputResumeFrame);
-        public MenuState State { get; private set; } = MenuState.Loading;
+        public static bool GameplayInputBlocked => Game is { } game && !game.IsGameplayActive;
+        public MenuState State => Map(Game?.State ?? GameState.Loading);
         public bool IsLoading => State == MenuState.Loading;
         public string ErrorMessage { get; private set; }
         public event Action ViewChanged;
         public event Action<float> LoadingProgress;
         GameMenuView view;
-        int inputResumeFrame;
+        IGameService boundGame;
+
+        static IGameService Game => ServiceRegistry.TryGet(out IGameService game) ? game : null;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics() { Instance = null; }
@@ -40,6 +42,16 @@ namespace LightPlatformer.UI
             Instance.SceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
 
+        static MenuState Map(GameState state) => state switch
+        {
+            GameState.Menu => MenuState.LevelSelect,
+            GameState.Playing => MenuState.Playing,
+            GameState.Paused => MenuState.Paused,
+            GameState.GameOver => MenuState.GameOver,
+            GameState.Victory => MenuState.Victory,
+            _ => MenuState.Loading
+        };
+
         void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -48,22 +60,47 @@ namespace LightPlatformer.UI
             view = gameObject.AddComponent<GameMenuView>();
             SceneManager.sceneLoaded += SceneLoaded;
             WebAnalytics.SetConsent(true);
+            Bind();
         }
 
         void OnDestroy()
         {
             SceneManager.sceneLoaded -= SceneLoaded;
-            if (Instance == this) { Instance = null; Time.timeScale = 1f; }
+            Unbind();
+            if (Instance == this) Instance = null;
+        }
+
+        void Bind()
+        {
+            var game = Game;
+            if (ReferenceEquals(game, boundGame)) return;
+            Unbind();
+            boundGame = game;
+            if (game == null) return;
+            game.StateChanged += GameStateChanged;
+            game.DeathReported += RecordDeath;
+            game.GoalReached += RecordVictory;
+            game.LoadingProgress += ForwardLoadingProgress;
+        }
+
+        void Unbind()
+        {
+            if (boundGame == null) return;
+            boundGame.StateChanged -= GameStateChanged;
+            boundGame.DeathReported -= RecordDeath;
+            boundGame.GoalReached -= RecordVictory;
+            boundGame.LoadingProgress -= ForwardLoadingProgress;
+            boundGame = null;
         }
 
         void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (mode != LoadSceneMode.Single) return;
             Debug.Log("Game UI ready: " + scene.path);
-            Time.timeScale = 1f;
             ErrorMessage = null;
             EnsureEventSystem();
-            SetState(scene.path == LevelCatalog.MenuPath ? MenuState.LevelSelect : MenuState.Playing);
+            Bind();
+            Refresh();
         }
 
         void EnsureEventSystem()
@@ -76,7 +113,7 @@ namespace LightPlatformer.UI
 
         void Update()
         {
-            if (State == MenuState.Playing) LevelStats.AttemptSeconds += Time.deltaTime;
+            Bind();
             bool escape = Input.GetKeyDown(KeyCode.Escape);
             if (escape && view.CloseControls()) return;
             if (escape || Input.GetKeyDown(KeyCode.P))
@@ -85,141 +122,118 @@ namespace LightPlatformer.UI
                 else if (State == MenuState.Paused) Resume();
             }
             if (Input.GetKeyDown(KeyCode.Tab)) view.MoveFocus(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-            if (State == MenuState.Playing && Time.timeScale == 0f) Pause();
         }
 
-        void SetState(MenuState state)
+        void GameStateChanged(GameState previous, GameState next)
         {
-            State = state;
-            if (state == MenuState.Playing) inputResumeFrame = Time.frameCount;
+            if (next == GameState.Loading)
+            {
+                ErrorMessage = null;
+                LevelStats.StartAttempt();
+            }
+            Refresh();
+        }
+
+        void ForwardLoadingProgress(float progress) => LoadingProgress?.Invoke(progress);
+
+        void Refresh()
+        {
             view.Render(this);
             ViewChanged?.Invoke();
         }
 
         public void Pause()
         {
-            if (State != MenuState.Playing) return;
-            Time.timeScale = 0f;
-            SetState(MenuState.Paused);
+            Bind();
+            Game?.Pause();
         }
 
         public void Resume()
         {
-            if (State != MenuState.Paused) return;
-            Time.timeScale = 1f;
-            SetState(MenuState.Playing);
+            Bind();
+            Game?.Resume();
         }
 
-        public static void NotifyGameOver(string cause = "unknown")
-        {
-            if (Instance != null) Instance.Finish(MenuState.GameOver, cause);
-        }
+        public static void NotifyGameOver(string cause = "unknown") => Game?.ReportDeath(cause);
 
-        public static void NotifyVictory()
-        {
-            if (Instance != null) Instance.Finish(MenuState.Victory);
-        }
+        public static void NotifyVictory() => Game?.ReportGoalReached();
 
-        void Finish(MenuState result, string cause = null)
+        void RecordDeath(string cause)
         {
-            if (State != MenuState.Playing) return;
-
             string level = SceneManager.GetActiveScene().name;
+            LevelStats.RecordDeath(level);
 
-            if (result == MenuState.GameOver)
-            {
-                CheckpointProgress.deathTimes++;
-                LevelStats.RecordDeath(level);
+            PlayerDeathContext ctx = PlayerDeathContext.Current;
+            if (ctx != null)
+                WebAnalytics.ReportDeath(level, cause, ctx.LastGroundedPosition, ctx.transform.position);
+        }
 
-                PlayerDeathContext ctx = PlayerDeathContext.Current;
-                if (ctx != null)
-                    WebAnalytics.ReportDeath(level, cause, ctx.LastGroundedPosition, ctx.transform.position);
-            }
-            else if (result == MenuState.Victory)
-            {
-                WebAnalytics.ReportCompletion(level, LevelStats.AttemptSeconds,
-                LevelStats.CoinStatus(level), LevelStats.DeathsIn(level));
-                LevelStats.ClearLevel(level);
-            }
-
-            Time.timeScale = 0f;
-            SetState(result);
+        void RecordVictory()
+        {
+            string level = SceneManager.GetActiveScene().name;
+            WebAnalytics.ReportCompletion(level, LevelStats.AttemptSeconds,
+            LevelStats.CoinStatus(level), LevelStats.DeathsIn(level));
+            LevelStats.ClearLevel(level);
         }
 
         public bool Restart()
         {
             if (State == MenuState.LevelSelect || IsLoading) return false;
-            return LoadLevel(SceneManager.GetActiveScene().path);
+            return Request(SceneManager.GetActiveScene().path, game => game.Retry());
         }
 
         public bool RestartFromBeginning()
         {
-            CheckpointProgress.reachedCheckpoint = false;
-            return Restart();
+            if (State == MenuState.LevelSelect || IsLoading) return false;
+            return Request(SceneManager.GetActiveScene().path, game => game.RestartLevel());
         }
+
         public bool LoadLevel(string path)
         {
             if (IsLoading) return false;
+            return Request(path, game => game.LoadLevel(path));
+        }
+
+        bool Request(string path, Func<IGameService, bool> load)
+        {
             var level = LevelCatalog.ReadBuildLevels().Find(entry => entry.ScenePath == path);
             if (level == null || !Application.CanStreamedLevelBeLoaded(path))
             {
-                ErrorMessage = "This level is unavailable. Choose another level or return to level select.";
-                view.ShowError(ErrorMessage);
+                ShowError("This level is unavailable. Choose another level or return to level select.");
                 return false;
             }
-            StartCoroutine(Load(path));
+            Bind();
+            if (Game == null || !load(Game))
+            {
+                ShowError("The level could not be opened. Please try again.");
+                return false;
+            }
             return true;
         }
 
         public bool GoToMenu()
         {
             if (IsLoading) return false;
-            if (!Application.CanStreamedLevelBeLoaded(LevelCatalog.MenuPath))
+            Bind();
+            if (Game == null || !Game.GoToMenu())
             {
-                Time.timeScale = 0f;
-                SetState(MenuState.LevelSelect);
-                return true;
+                ShowError("The level select could not be opened. Please try again.");
+                return false;
             }
-            StartCoroutine(Load(LevelCatalog.MenuPath));
             return true;
         }
 
         public bool NextLevel()
         {
             if (State != MenuState.Victory) return false;
-            var levels = LevelCatalog.ReadBuildLevels();
-            int current = levels.FindIndex(level => level.ScenePath == SceneManager.GetActiveScene().path);
-            return current >= 0 && current + 1 < levels.Count && LoadLevel(levels[current + 1].ScenePath);
+            Bind();
+            return Game != null && Game.NextLevel();
         }
 
-        IEnumerator Load(string path)
+        void ShowError(string message)
         {
-            ErrorMessage = null;
-            LevelStats.StartAttempt();
-            SetState(MenuState.Loading);
-            Time.timeScale = 1f;
-            AsyncOperation operation;
-            try { operation = SceneManager.LoadSceneAsync(path, LoadSceneMode.Single); }
-            catch (Exception)
-            {
-                Time.timeScale = 0f;
-                SetState(MenuState.LevelSelect);
-                ErrorMessage = "The level could not be opened. Please try again.";
-                view.ShowError(ErrorMessage);
-                yield break;
-            }
-            if (operation == null)
-            {
-                SetState(MenuState.LevelSelect);
-                ErrorMessage = "The level could not be opened. Please try again.";
-                view.ShowError(ErrorMessage);
-                yield break;
-            }
-            while (!operation.isDone)
-            {
-                LoadingProgress?.Invoke(Mathf.Clamp01(operation.progress / 0.9f));
-                yield return null;
-            }
+            ErrorMessage = message;
+            view.ShowError(message);
         }
     }
 }

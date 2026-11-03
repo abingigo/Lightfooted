@@ -1,0 +1,7 @@
+{
+  "name": "Lightfooted.Core.Editor",
+  "rootNamespace": "Core.Editor",
+  "references": ["Lightfooted.Core"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": false
+}

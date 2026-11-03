@@ -4,8 +4,8 @@ namespace Economy
 {
     public enum CurrencyLifetime
     {
-        Persistent,   // survives scene changes (until the game is quit, unless you add saving)
-        PerLevel      // reset every time a level loads, including restarts
+        Persistent,   // added to the wallet when a level is completed; lost on restart or quit
+        PerLevel      // only lasts for the current level; kept at checkpoints
     }
     
     [CreateAssetMenu(menuName = "Lightfooted/Economy/Currency Type", fileName = "NewCurrencyType")]

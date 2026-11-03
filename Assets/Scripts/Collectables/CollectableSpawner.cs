@@ -13,12 +13,21 @@ namespace Collectables
 
         private Collectable current;
         private float respawnAt = -1f; // < 0 = no respawn pending
+        private bool collected;
+        private bool restoredCollected;
 
         public Collectable Current => current;
+        public bool HasBeenCollected => collected && current == null;
 
         private void Start()
         {
-            if (spawnOnStart) Spawn();
+            if (spawnOnStart && !restoredCollected) Spawn();
+        }
+
+        public void RestoreCollected()
+        {
+            collected = restoredCollected = true;
+            if (respawn) respawnAt = Time.time + respawnDelay;
         }
 
         private void Update()
@@ -42,6 +51,7 @@ namespace Collectables
         {
             collectable.Collected -= OnCollected;
             current = null;
+            collected = true;
             if (ServiceRegistry.TryGet(out ICollectableService service)) service.Release(collectable);
             if (respawn) respawnAt = Time.time + respawnDelay;
         }

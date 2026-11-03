@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a14e00a7d434b95a50c4e6690191ee3, type: 3}
+  m_Name: LevelList
+  m_EditorClassIdentifier: Lightfooted.Core::Core.LevelList
+  menu:
+    guid: c44b70971f10f2241969e7348d63e43b
+    path: Assets/Scenes/Johnny/LevelSelect.unity
+  levels:
+  - scene:
+      guid: 6f0945330b69a44c8ac3951d5d6600e6
+      path: Assets/Scenes/TutorialLevel.unity
+    title: Tutorial
+    description: Learn to move, jump, dash, and use light to stay solid.
+  - scene:
+      guid: 66291713c0b4e1247bd73f4d28fdd1e3
+      path: Assets/Scenes/Level 1.unity
+    title: Level 1
+    description: Explore a new challenge of light and shadow.
+  - scene:
+      guid: d3ca7095d05594062a8fd0f3f050dec7
+      path: Assets/Scenes/Level 2.unity
+    title: Level 2
+    description: Explore a new challenge of light and shadow.
+  - scene:
+      guid: afa45e118dd6342ef99dfc8d412de220
+      path: Assets/Scenes/Level 3.unity
+    title: Level 3
+    description: Explore a new challenge of light and shadow.
