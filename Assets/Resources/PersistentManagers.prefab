@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5318470296150847562}
   - component: {fileID: 6091735428871203654}
   - component: {fileID: 8426193057716380419}
+  - component: {fileID: 7100000000000000010}
   m_Layer: 0
   m_Name: PersistentManagers
   m_TagString: Untagged
@@ -90,3 +91,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f13a27a26724f96abc9b158c048b24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyManager
+--- !u!114 &7100000000000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4637201958143820117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 668c512159e74f3e87c6bc5ad6644b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyCheckpointState
+  id: persistent.currency

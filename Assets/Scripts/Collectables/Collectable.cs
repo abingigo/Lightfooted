@@ -14,6 +14,7 @@ namespace Collectables
         private bool collected;
         
         public CollectDefinition Definition => definition;
+        public bool IsCollected => collected;
         public event Action<Collectable> Collected;
 
         private void Reset() => spriteRenderer = GetComponentInChildren<SpriteRenderer>();

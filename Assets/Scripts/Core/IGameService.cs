@@ -39,6 +39,7 @@ namespace Core
         event Action<string> DeathReported;
         event Action GoalReached;
         event Action<Vector3> Respawned;
+        event Action CheckpointChanged;
         event Action<float> LoadingProgress;
     }
 }
