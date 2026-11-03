@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Collectables
 {
@@ -9,6 +10,9 @@ namespace Collectables
     {
         [SerializeField] private CollectDefinition definition;
         [SerializeField] private SpriteRenderer spriteRenderer;
+
+        [Tooltip("Runs after this is collected, e.g. to show a pickup message.")]
+        [SerializeField] private UnityEvent onCollected = new();
         
         private Sprite defaultSprite;
         private bool collected;
@@ -41,12 +45,13 @@ namespace Collectables
 
             var body = other.attachedRigidbody;
             if (body == null || !body.TryGetComponent(out Collector collector)) return;
-            if (!definition.TryApply(collector)) return;
+            if (!definition.TryApply(collector, this)) return;
 
             collected = true;
             gameObject.SetActive(false); 
             collector.NotifyCollected(definition);
             Collected?.Invoke(this);
+            onCollected.Invoke();
         }
     }
 }

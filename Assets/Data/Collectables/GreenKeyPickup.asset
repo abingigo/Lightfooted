@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9445b008cac40a791a74c44d237f102, type: 3}
+  m_Name: GreenKeyPickup
+  m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyCollectDef
+  prefabOverride: {fileID: 0}
+  sprite: {fileID: 0}
+  pickupMessage: Key found!
+  currency: {fileID: 11400000, guid: 30b6029d8f7c4ffaac00a552285e0410, type: 2}
+  amount: 1

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2258252175912565246}
   - component: {fileID: 7100000000000000003}
   m_Layer: 0
-  m_Name: Coin
+  m_Name: Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 5859075269422460392}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.57, y: 9.91, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0.8021469, b: 0, a: 1}
+  m_Color: {r: 0.2, g: 0.9, b: 0.35, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -103,12 +103,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5859075269422460392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98e644c5cf9a84444b0491dc2f96c054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Coin
-  text: {fileID: 0}
-  message: Coin collected!
-  messageDuration: 2
+  m_Script: {fileID: 11500000, guid: 041fc1d9b90944a48b2f93e93c3ae3f4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Collectables.Collectable
+  definition: {fileID: 11400000, guid: 72e14843a0f44d4a9b28305a0432762d, type: 2}
+  spriteRenderer: {fileID: 4879964009858249755}
+  onCollected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &2258252175912565246
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -154,7 +156,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5859075269422460392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 770ec294a3954d9dbb8aa334aa0b457a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoinState
+  m_Script: {fileID: 11500000, guid: 9fd3ac0b50cb4257a7758c2068bd1742, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Collectables.CollectableState
   id: 
