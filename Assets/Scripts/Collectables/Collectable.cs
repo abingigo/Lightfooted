@@ -11,7 +11,7 @@ namespace Collectables
         [SerializeField] private CollectDefinition definition;
         [SerializeField] private SpriteRenderer spriteRenderer;
 
-        [Tooltip("Runs after this is collected, e.g. to show a pickup message.")]
+        [Tooltip("Runs after this is collected, e.g. to play a sound.")]
         [SerializeField] private UnityEvent onCollected = new();
         
         private Sprite defaultSprite;
@@ -49,7 +49,7 @@ namespace Collectables
 
             collected = true;
             gameObject.SetActive(false); 
-            collector.NotifyCollected(definition);
+            collector.NotifyCollected(definition, this);
             Collected?.Invoke(this);
             onCollected.Invoke();
         }

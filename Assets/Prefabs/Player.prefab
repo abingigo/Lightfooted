@@ -285,7 +285,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 7100000000000000001}
   - component: {fileID: 7100000000000000002}
   - component: {fileID: 7100000000000000040}
+  - component: {fileID: 7100000000000000041}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -878,7 +879,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
@@ -1322,7 +1323,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1534,3 +1535,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFacing
   visuals: {fileID: 3170918622145436347}
+--- !u!114 &7100000000000000041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec28e3292d140a1833678bf6df6e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Collectables.PickupPopups
+  popup: {fileID: 1100000000000000005, guid: 199fa5d0c0b041d08c692c18e1199c28, type: 3}
+  offset: {x: 0, y: 0.5, z: 0}

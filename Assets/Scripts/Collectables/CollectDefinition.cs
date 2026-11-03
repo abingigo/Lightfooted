@@ -7,7 +7,7 @@ namespace Collectables
         [SerializeField] private Collectable prefabOverride;
         [SerializeField] private Sprite sprite;
 
-        [Tooltip("Shown by the level's PickupMessage when this is collected. Empty = no message.")]
+        [Tooltip("Shown in a popup where this is collected. Empty = no popup.")]
         [SerializeField] private string pickupMessage;
 
         public Collectable PrefabOverride => prefabOverride;
