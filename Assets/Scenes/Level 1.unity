@@ -677,31 +677,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 252611058}
   m_CullTransparentMesh: 1
---- !u!1 &271632455 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4251545105464418845, guid: 6836be48edf4d6e428258908924f9805, type: 3}
-  m_PrefabInstance: {fileID: 1079251445}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &271632456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271632455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3266e7f1577b742469a93c5db7453c50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  player: {fileID: 0}
-  offset: {x: 0, y: 0, z: -10}
-  smoothSpeed: 8
-  minX: -10
-  maxX: 10
-  clampVertical: 0
-  minY: -5
-  maxY: 5
 --- !u!4 &271632472 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6202738342181332388, guid: 6836be48edf4d6e428258908924f9805, type: 3}
@@ -1928,6 +1903,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 919784b8c51f14620a3d69cffe0d8b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Victory
+  doorDash: {fileID: 0}
+  enterText: {fileID: 0}
 --- !u!4 &811482570
 Transform:
   m_ObjectHideFlags: 0
@@ -2378,10 +2355,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4251545105464418845, guid: 6836be48edf4d6e428258908924f9805, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 271632456}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6836be48edf4d6e428258908924f9805, type: 3}
 --- !u!1001 &1124983370
 PrefabInstance:
