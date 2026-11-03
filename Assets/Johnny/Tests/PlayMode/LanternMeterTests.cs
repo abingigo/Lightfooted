@@ -88,7 +88,9 @@ public class LanternMeterTests
         Assert.That(Status.DurationSeconds, Is.EqualTo(5f));
         Assert.That(Alpha, Is.EqualTo(1f));
         Assert.That(Fill, Is.GreaterThan(0.95f));
-        Assert.That(Meter.GetComponentInChildren<TMP_Text>().text, Is.EqualTo("Lantern 5s"));
+        Assert.That(Meter.GetComponentsInChildren<TMP_Text>(), Is.Empty);
+        Assert.That(Meter.GetComponent<Image>(), Is.Null);
+        Assert.That(Meter.GetComponentsInChildren<Image>().Length, Is.EqualTo(2));
         yield return Capture("meter-full.png");
         yield return new WaitForSeconds(1.1f);
         Assert.That(Fill, Is.InRange(0.65f, 0.8f));
@@ -112,8 +114,7 @@ public class LanternMeterTests
         Assert.That(Fill, Is.InRange(0.2f, 0.3f));
         Assert.That(timer.gameObject.activeSelf, Is.True);
         Assert.That(timer.GetComponents<Behaviour>().Single(component => component.GetType().Name == "Light2D").enabled, Is.True);
-        Assert.That(Meter.GetComponentInChildren<TMP_Text>().text, Is.EqualTo("Lantern 2s"));
-        Assert.That(Meter.GetComponent<Image>().color.r, Is.GreaterThan(0.5f));
+        Assert.That(Meter.transform.Find("Time bar/Time fill").GetComponent<Image>().color.r, Is.GreaterThan(0.9f));
         yield return Capture("meter-low.png");
         while (timer.gameObject.activeSelf && Time.realtimeSinceStartup < deadline) yield return null;
         yield return null;
