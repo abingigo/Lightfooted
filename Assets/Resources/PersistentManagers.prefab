@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 6091735428871203654}
   - component: {fileID: 8426193057716380419}
   - component: {fileID: 7100000000000000010}
+  - component: {fileID: 7100000000000000011}
+  - component: {fileID: 7100000000000000012}
   m_Layer: 0
   m_Name: PersistentManagers
   m_TagString: Untagged
@@ -104,3 +106,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyCheckpointState
   id: persistent.currency
+--- !u!114 &7100000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4637201958143820117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b17950a3bbc4c7541b33256a28677339, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Collectables.ChallengeCoinRecord
+--- !u!114 &7100000000000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4637201958143820117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d7b499ee421a140829bba83eee1b58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Collectables.ChallengeCoinRecordState
+  id: persistent.challengecoins

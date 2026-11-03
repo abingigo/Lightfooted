@@ -17,9 +17,13 @@ namespace Core
 
             [SerializeField, TextArea(2, 4)] private string description;
 
+            [Tooltip("Challenge coins in the scene. Filled in automatically when the scene is saved.")] [SerializeField]
+            private int coinTotal;
+
             public string ScenePath => scene.Path;
             public string Title => title;
             public string Description => description;
+            public int CoinTotal => coinTotal;
             public bool IsPlayable => scene.IsInBuild;
         }
 

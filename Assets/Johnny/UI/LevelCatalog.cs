@@ -81,6 +81,18 @@ namespace LightPlatformer.UI
             return new LevelEntry(path);
         }
 
+        public static string CoinSummary(string path)
+        {
+            if (!TryGetLevelList(out var list)) return "";
+            foreach (var level in list.Levels)
+            {
+                if (level.ScenePath != path || level.CoinTotal <= 0) continue;
+                int found = ServiceRegistry.TryGet(out IChallengeCoinService coins) ? coins.FoundIn(path) : 0;
+                return $"Coins found {found}/{level.CoinTotal}";
+            }
+            return "";
+        }
+
         static bool TryGetLevelList(out LevelList list)
         {
             list = ServiceRegistry.TryGet(out IGameService game) ? game.Levels : null;
