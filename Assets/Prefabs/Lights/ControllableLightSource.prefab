@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3810358043804360459}
   - component: {fileID: 1440131024510267514}
   - component: {fileID: 1161476813626418470}
+  - component: {fileID: 7100000000000000030}
   m_Layer: 7
   m_Name: ControllableLightSource
   m_TagString: Light
@@ -51,7 +52,7 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 0.8539926, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.93954295, b: 0.5707547, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
@@ -179,3 +180,17 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &7100000000000000030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7238063984138736053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d97395d53cb4e9f86987f9aaf79ea1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectionTint
+  selectedColor: {r: 1, g: 0.69471335, b: 0.11792451, a: 1}
+  light2D: {fileID: 6463115130651525708}

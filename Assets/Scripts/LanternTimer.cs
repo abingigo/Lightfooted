@@ -33,6 +33,13 @@ public class LanternTimer : MonoBehaviour, LightPlatformer.UI.ILanternStatus
         Invoke(nameof(TurnOff), duration);
     }
 
+    public void Light(float seconds)
+    {
+        duration = seconds;
+        if (gameObject.activeSelf) ResetTimer();
+        else gameObject.SetActive(true);
+    }
+
     void TurnOff()
     {
         gameObject.SetActive(false);

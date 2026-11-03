@@ -23,6 +23,7 @@ namespace LightPlatformer.UI
         TMP_Text errorText;
         TMP_Text levelTitle;
         TMP_Text levelDescription;
+        TMP_Text levelCoins;
         TMP_Text playLabel;
         Button playButton;
         LevelEntry selected;
@@ -85,7 +86,7 @@ namespace LightPlatformer.UI
             Text(detail, "YOUR NEXT CHALLENGE", 13, Accent, 0, 131, 448, 24);
             levelTitle = Text(detail, "", 32, Color.white, 0, 89, 448, 46);
             levelDescription = Text(detail, "", 18, Muted, 0, 28, 448, 68);
-            Text(detail, "", 15, Muted, 0, -48, 448, 48);
+            levelCoins = Text(detail, "", 15, Muted, 0, -48, 448, 48);
             playButton = Button(detail, "Play", 448, 52, 0, -112, () =>
             {
                 if (selected != null) controller.LoadLevel(selected.ScenePath);
@@ -125,6 +126,7 @@ namespace LightPlatformer.UI
         {
             selected = entry; selectedPath = entry.ScenePath;
             levelTitle.text = entry.Title; levelDescription.text = entry.Description;
+            if (levelCoins != null) levelCoins.text = LevelCatalog.CoinSummary(entry.ScenePath);
             playLabel.text = "Play " + entry.Title;
             for (int i = 0; i < levelButtons.Count; i++)
             {
