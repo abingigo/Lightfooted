@@ -36,7 +36,7 @@ MonoBehaviour:
     coinTotal: 1
   - scene:
       guid: afa45e118dd6342ef99dfc8d412de220
-      path: Assets/Scenes/Level 3.unity
+      path: Assets/Scenes/Level 4.unity
     title: Level 3
     description: Explore a new challenge of light and shadow.
     coinTotal: 1
