@@ -477,6 +477,7 @@ GameObject:
   - component: {fileID: 7100000000000000002}
   - component: {fileID: 7100000000000000040}
   - component: {fileID: 7100000000000000041}
+  - component: {fileID: 7100000000000000042}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1549,3 +1550,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Collectables.PickupPopups
   popup: {fileID: 1100000000000000005, guid: 199fa5d0c0b041d08c692c18e1199c28, type: 3}
   offset: {x: 0, y: 0.5, z: 0}
+--- !u!114 &7100000000000000042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4251545105464418845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8b2c6e91d44a0b9e57c1a4d2086f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightFade
+  exposure: {fileID: 3678564207102497089}
+  sprites: []
+  darkAlpha: 0.4
+  fadeSeconds: 0.15
