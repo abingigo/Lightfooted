@@ -9,7 +9,9 @@ public class Checkpoint : MonoBehaviour
 
     [Tooltip("Glow colour while this is the active checkpoint.")]
     [SerializeField] Color activeColor = new Color(0.45f, 1f, 0.6f, 1f);
-
+    [SerializeField] Sprite flagdown;
+    Sprite flagup;
+    SpriteRenderer flagRenderer;
     Collider2D trigger;
     Color idleColor;
     IGameService game;
@@ -17,6 +19,8 @@ public class Checkpoint : MonoBehaviour
     void Awake()
     {
         trigger = GetComponent<Collider2D>();
+        flagRenderer = GetComponent<SpriteRenderer>();
+        flagup = flagRenderer.sprite;
         if (glow == null) glow = GetComponentInChildren<Light2D>();
         if (glow != null) idleColor = glow.color;
     }
@@ -40,6 +44,17 @@ public class Checkpoint : MonoBehaviour
     void Refresh()
     {
         bool active = IsActive;
+        if (flagdown != null)
+        {
+            if (active)
+            {
+            flagRenderer.sprite = flagdown;
+            }
+            else
+            {
+                flagRenderer.sprite = flagup;
+            }
+        }
         if (trigger != null) trigger.enabled = !active;
         if (glow != null) glow.color = active ? activeColor : idleColor;
     }
