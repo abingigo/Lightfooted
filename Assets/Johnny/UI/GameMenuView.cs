@@ -231,8 +231,25 @@ namespace LightPlatformer.UI
             var panel = Box(overlay, "Controls", 620, 570, 0, 0, Panel);
             Text(panel, "A little light goes a long way", 28, Color.white, 0, 233, 560, 56);
             Text(panel, "CONTROLS", 13, Accent, 0, 180, 560, 24);
-            Text(panel, "A / D                       Move\nSpace                       Jump\nLeft Shift                  Dash\nClick a light, then F     Rotate light\nE / Q                          Pick up / throw light\nR                                Pick up / insert battery\nEsc / P                      Pause or resume", 20, Color.white, 0, 25, 560, 280);
-            Text(panel, "Stay in the light to remain solid.\nTab / Shift+Tab moves between buttons; Enter selects.", 16, Muted, 0, -170, 560, 62);
+
+            (string Key, string Action)[] rows =
+            {
+                ("A / D", "Move"),
+                ("Space", "Jump"),
+                ("Left Shift", "Dash"),
+                ("Click a light, then F", "Rotate the light"),
+                ("E", "Enter an open door"),
+                ("Esc / P", "Pause or resume")
+            };
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                float y = 128 - i * 44;
+                Text(panel, rows[i].Key, 20, Accent, -176, y, 208, 34);
+                Text(panel, rows[i].Action, 20, Color.white, 114, y, 332, 34);
+            }
+
+            Text(panel, "Stay in the light to stay solid.\nTab moves forward. Shift+Tab moves back.\nPress Enter to select.", 16, Muted, 0, -169, 560, 62);
             var back = Button(panel, "Back", 432, 48, 0, -233, ToggleControls, true);
             EventSystem.current?.SetSelectedGameObject(back.gameObject);
         }

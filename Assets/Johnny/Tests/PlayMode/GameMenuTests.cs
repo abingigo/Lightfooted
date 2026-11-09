@@ -11,6 +11,7 @@ using UnityEngine.UI;
 
 public class GameMenuTests
 {
+    const string MenuScene = "Assets/Scenes/LevelSelect.unity";
     const string Tutorial = "Assets/Scenes/TutorialLevel.unity";
     GameMenuController Menu => GameMenuController.Instance;
 
@@ -19,7 +20,7 @@ public class GameMenuTests
     {
         Time.timeScale = 1;
         Assert.That(Menu, Is.Not.Null, "Runtime bootstrap must create the UI without a scene component");
-        yield return SceneManager.LoadSceneAsync(LevelCatalog.MenuPath);
+        yield return SceneManager.LoadSceneAsync(MenuScene);
         yield return null;
         Assert.That(Menu.State, Is.EqualTo(MenuState.LevelSelect));
     }
@@ -83,9 +84,17 @@ public class GameMenuTests
         Assert.That(Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None).Any(text => text.text == "1 level available"), Is.True);
         FindButton("Controls").onClick.Invoke();
         yield return null;
-        var instructions = Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None).Single(text => text.text.Contains("Click a light, then F"));
-        Assert.That(instructions.text, Does.Contain("E / Q").And.Contain("R "));
-        Assert.That(instructions.isTextOverflowing, Is.False, "The extra team controls must fit the panel");
+        var labels = GameObject.Find("Controls screen").GetComponentsInChildren<TMP_Text>();
+        var rotateKey = labels.Single(text => text.text == "Click a light, then F");
+        var doorKey = labels.Single(text => text.text == "E");
+        var rotateAction = labels.Single(text => text.text == "Rotate the light");
+        var doorAction = labels.Single(text => text.text == "Enter an open door");
+        Assert.That(rotateKey.rectTransform.anchoredPosition.x, Is.EqualTo(doorKey.rectTransform.anchoredPosition.x));
+        Assert.That(rotateAction.rectTransform.anchoredPosition.x, Is.EqualTo(doorAction.rectTransform.anchoredPosition.x));
+        Assert.That(rotateKey.rectTransform.anchoredPosition.y, Is.EqualTo(rotateAction.rectTransform.anchoredPosition.y));
+        Assert.That(doorKey.rectTransform.anchoredPosition.y, Is.EqualTo(doorAction.rectTransform.anchoredPosition.y));
+        Assert.That(labels.Any(text => text.isTextOverflowing), Is.False);
+        Assert.That(labels.Any(text => text.text == "E / Q" || text.text == "R"), Is.False);
         FindButton("Back").onClick.Invoke();
         yield return null;
         FindButton("Play Tutorial").onClick.Invoke();
@@ -159,7 +168,7 @@ public class GameMenuTests
         Assert.That(Object.FindObjectsByType<Button>(FindObjectsSortMode.None).Any(button => button.GetComponentInChildren<TMP_Text>()?.text == "Next level"), Is.False);
         FindButton("Level select").onClick.Invoke();
         yield return WaitForLevel();
-        Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(LevelCatalog.MenuPath));
+        Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(MenuScene));
         Assert.That(Menu.State, Is.EqualTo(MenuState.LevelSelect));
         Assert.That(FindButton("Play Tutorial").interactable, Is.True);
     }

@@ -156,6 +156,10 @@ public class LightTutorialLevel : MonoBehaviour
             return;
         }
 
+        const string throwHint = "Hold A or D. Press Q, then release it.\nHold Q longer to throw farther.";
+        const float throwHintTopMargin = 28f;
+        float height = 72f;
+        float topMargin = 100f;
         string instruction;
         Vector3 hintPosition;
         if (!batteryLight.HasBattery)
@@ -178,7 +182,9 @@ public class LightTutorialLevel : MonoBehaviour
         }
         else if (!unlocked[1])
         {
-            instruction = "Press Q to throw the light toward this platform.";
+            instruction = throwHint + "\nPress Q alone to drop.";
+            height = 96f;
+            topMargin = throwHintTopMargin;
             hintPosition = steps[1].transform.position;
         }
         else if (player.transform.position.y < 3.7f)
@@ -188,7 +194,10 @@ public class LightTutorialLevel : MonoBehaviour
         }
         else if (!unlocked[2])
         {
-            instruction = "Catch with E, then throw with Q toward this platform.";
+            instruction = throwableLight.IsCarried
+                ? throwHint
+                : "Press E to pick up the light.";
+            if (throwableLight.IsCarried) topMargin = throwHintTopMargin;
             hintPosition = steps[2].transform.position;
         }
         else if (player.transform.position.y < 5.8f)
@@ -209,9 +218,10 @@ public class LightTutorialLevel : MonoBehaviour
             return;
         }
         const float width = 500f;
-        const float height = 72f;
         float x = Mathf.Clamp(screen.x - width * 0.5f, 8f, Mathf.Max(8f, Screen.width - width - 8f));
-        float y = Mathf.Clamp(Screen.height - screen.y - height, 100f, Screen.height - height - 8f);
+        float bottomLimit = Mathf.Max(8f, Screen.height - height - 8f);
+        float y = Mathf.Clamp(Screen.height - screen.y - height, Mathf.Min(topMargin, bottomLimit), bottomLimit);
+        hintRect.sizeDelta = new Vector2(width, height);
         hintRect.anchoredPosition = new Vector2(x, -y);
         bool brightBackground = IsHintOverLight(x, y, width, height, screen.z);
         if (hintUsesDarkText != brightBackground)

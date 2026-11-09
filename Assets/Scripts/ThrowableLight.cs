@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -14,6 +15,7 @@ public class ThrowableLight : MonoBehaviour
     float turnOffTime;
     bool carried;
     bool timerStarted;
+    readonly List<RaycastHit2D> previewHits = new List<RaycastHit2D>();
 
     public bool CanPickUp => body != null && body.simulated && !carried && Time.time >= nextPickupTime;
     public bool IsCarried => carried;
@@ -93,6 +95,54 @@ public class ThrowableLight : MonoBehaviour
 
     public void Throw(Vector2 position, Vector2 impulse, float pickupDelay)
     {
+        HasBeenThrown = true;
+        Release(position, impulse, pickupDelay);
+    }
+
+    public void Drop(float pickupDelay)
+    {
+        Release(transform.position, Vector2.zero, pickupDelay);
+    }
+
+    internal bool PredictThrow(Vector2 position, Vector2 impulse, Transform player, List<Vector2> path,
+        out Vector2 landing)
+    {
+        path.Clear();
+        landing = default;
+        if (physicalCollider is not CircleCollider2D circle) return false;
+
+        Vector3 scale = circle.transform.lossyScale;
+        float radius = circle.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
+        Vector2 center = position + (Vector2)circle.transform.TransformVector(circle.offset);
+        Vector2 velocity = impulse / body.mass;
+        float step = Time.fixedDeltaTime;
+        Vector2 gravity = Physics2D.gravity * body.gravityScale;
+        float damping = 1f / (1f + body.linearDamping * step);
+        var filter = new ContactFilter2D { useTriggers = false };
+        filter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
+
+        int steps = Mathf.CeilToInt(2f / step);
+        for (int i = 0; i < steps; i++)
+        {
+            velocity = Vector2.ClampMagnitude((velocity + gravity * step) * damping, Physics2D.maxTranslationSpeed);
+            Vector2 travel = velocity * step;
+            Physics2D.CircleCast(center, radius, travel.normalized, filter, previewHits, travel.magnitude);
+            foreach (RaycastHit2D hit in previewHits)
+            {
+                if (hit.collider.transform.IsChildOf(player) || hit.collider.attachedRigidbody == body) continue;
+                landing = hit.point;
+                return true;
+            }
+
+            center += travel;
+            if (i % 4 == 0) path.Add(center);
+        }
+
+        return false;
+    }
+
+    void Release(Vector3 position, Vector2 impulse, float pickupDelay)
+    {
         remainingTimeleft = TimeLeft;
         CancelInvoke(nameof(TurnOff));
 
@@ -101,7 +151,6 @@ public class ThrowableLight : MonoBehaviour
             TurnOff();
         }
 
-        HasBeenThrown = true;
         carried = false;
         transform.SetParent(null, true);
         transform.position = position;
