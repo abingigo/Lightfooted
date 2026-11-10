@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 public class LanternMeterTests
 {
-    const string Level = "Assets/Scenes/Level 3.unity";
+    const string Level = "Assets/Scenes/Level 4.unity";
     GameMenuController Menu => GameMenuController.Instance;
     GameObject player;
     MonoBehaviour timer;

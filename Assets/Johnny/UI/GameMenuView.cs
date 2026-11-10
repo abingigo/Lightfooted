@@ -334,7 +334,7 @@ namespace LightPlatformer.UI
                 Text(panel, rows[i].Action, 20, Color.white, 114, y, 332, 34);
             }
 
-            Text(panel, "Stay in the light to stay solid.\nTab moves forward. Shift+Tab moves back.\nPress Enter to select.", 16, Muted, 0, -169, 560, 62);
+            Text(panel, "Stay in the light to stay solid.", 16, Muted, 0, -169, 560, 62);
             var back = Button(panel, "Back", 432, 48, 0, -233, ToggleControls, true);
             EventSystem.current?.SetSelectedGameObject(back.gameObject);
         }

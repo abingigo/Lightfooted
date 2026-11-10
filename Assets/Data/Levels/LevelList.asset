@@ -35,8 +35,14 @@ MonoBehaviour:
     description: Turn the yellow lights to find a way out.
     coinTotal: 1
   - scene:
-      guid: afa45e118dd6342ef99dfc8d412de220
-      path: Assets/Scenes/Level 4.unity
+      guid: 3f2b63ee124f7409b82271507358ee98
+      path: Assets/Scenes/Level 3.unity
     title: Level 3
     description: "Put everything you\u2019ve learned about light to the test."
+    coinTotal: 1
+  - scene:
+      guid: afa45e118dd6342ef99dfc8d412de220
+      path: Assets/Scenes/Level 4.unity
+    title: Level 4
+    description: Explore a new challenge of light and shadow.
     coinTotal: 1
