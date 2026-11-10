@@ -51,4 +51,4 @@ MonoBehaviour:
       path: Assets/Scenes/Level dash.unity
     title: Level 5
     description: 
-    coinTotal: 0
+    coinTotal: 1
