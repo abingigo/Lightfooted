@@ -208,7 +208,7 @@ namespace Core
         private IEnumerator Load(string scenePath)
         {
             loading = true;
-            AttemptSeconds = 0f;
+            if (!restoreOnLoad) AttemptSeconds = 0f;
             SetState(GameState.Loading);
             if (inLevel) EndLevel();
 

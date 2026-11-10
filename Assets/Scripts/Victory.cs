@@ -77,5 +77,36 @@ public class Victory : MonoBehaviour
         doorDash.gameObject.SetActive(false);
             isOpening = false;
         isDoorOpen = true;
+        while (playerAtDoor && !levelEnded)
+        {
+            yield return null;
+            }
+
+        if (levelEnded) yield break;
+
+            isDoorOpen = false;
+        isOpening = true;
+        doorDash.gameObject.SetActive(true);
+
+            for (float closeTime = 0f; closeTime < 0.4f; closeTime += Time.deltaTime)
+        {
+            float closeAmount = Mathf.SmoothStep(0f, 1f, closeTime / 0.4f);
+
+            doorDash.localScale = new Vector3(
+                startScale.x * closeAmount, startScale.y, startScale.z);
+            doorDash.localPosition = startPos + Vector3.left * halfDoorWidth * (1f - closeAmount);
+
+            yield return null;
+        }
+
+         doorDash.localPosition = startPos;
+        doorDash.localScale = startScale;
+        isOpening = false;
+
+        if (playerAtDoor)
+        {
+         isOpening = true;
+            StartCoroutine(OpenDoor());
+        }
     }
 }
