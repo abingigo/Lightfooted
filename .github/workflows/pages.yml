@@ -33,6 +33,3 @@ jobs:
           path: docs
       - id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # Default is 10 minutes, which the WebGL builds exceed.
-          timeout: 1800000
