@@ -5,11 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class StripGraceOnMove : MonoBehaviour
 {
-    [Tooltip("The exposure whose coyote time ends when the player dashes or jumps (the body's).")]
+    [Tooltip("The exposure that gets no coyote time while the player dashes, or after a jump (the body's).")]
     [SerializeField] LightExposure exposure;
 
     PlayerController controller;
-    bool wasDashing;
     bool jumped;
 
     void Reset() => exposure = GetComponent<LightExposure>();
@@ -24,15 +23,9 @@ public class StripGraceOnMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        bool dashing = controller.isDashing;
-        if (exposure != null && (jumped || (dashing && !wasDashing))) exposure.ClearGrace();
+        if (exposure != null && (jumped || controller.isDashing)) exposure.ClearGrace();
         jumped = false;
-        wasDashing = dashing;
     }
 
-    void OnDisable()
-    {
-        jumped = false;
-        wasDashing = false;
-    }
+    void OnDisable() => jumped = false;
 }
