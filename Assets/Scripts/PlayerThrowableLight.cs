@@ -169,3 +169,4 @@ public class PlayerThrowableLight : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
 }
+
