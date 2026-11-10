@@ -26,17 +26,17 @@ MonoBehaviour:
       guid: 66291713c0b4e1247bd73f4d28fdd1e3
       path: Assets/Scenes/Level 1.unity
     title: Level 1
-    description: Explore a new challenge of light and shadow.
+    description: Ride purple beams to reach the door.
     coinTotal: 1
   - scene:
       guid: d3ca7095d05594062a8fd0f3f050dec7
       path: Assets/Scenes/Level 2.unity
     title: Level 2
-    description: Explore a new challenge of light and shadow.
+    description: Turn the yellow lights to find a way out.
     coinTotal: 1
   - scene:
       guid: afa45e118dd6342ef99dfc8d412de220
       path: Assets/Scenes/Level 4.unity
     title: Level 3
-    description: Explore a new challenge of light and shadow.
+    description: "Put everything you\u2019ve learned about light to the test."
     coinTotal: 1

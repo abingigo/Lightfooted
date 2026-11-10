@@ -17,6 +17,7 @@ namespace LightPlatformer.UI
         public MenuState State => Map(Game?.State ?? GameState.Loading);
         public bool IsLoading => State == MenuState.Loading;
         public string ErrorMessage { get; private set; }
+        internal LevelScoreboard.Result VictoryScore  {get; private set; }
         public event Action ViewChanged;
         public event Action<float> LoadingProgress;
         GameMenuView view;
@@ -169,12 +170,17 @@ namespace LightPlatformer.UI
         }
 
         void RecordVictory()
-        {
-            string level = SceneManager.GetActiveScene().name;
-            WebAnalytics.ReportCompletion(level, LevelStats.AttemptSeconds,
-            LevelStats.CoinStatus(level), LevelStats.DeathsIn(level));
-            LevelStats.ClearLevel(level);
-        }
+            {
+                var scene = SceneManager.GetActiveScene();
+                    float seconds = LevelStats.AttemptSeconds;
+                int deaths = LevelStats.DeathsIn(scene.name);
+
+                VictoryScore = LevelScoreboard.Record(
+                    scene.path, seconds,deaths, LevelStats.CoinsCollected, LevelStats.CoinTotal);
+
+                WebAnalytics.ReportCompletion(scene.name, seconds, LevelStats.CoinStatus(scene.name), deaths);
+                LevelStats.ClearLevel(scene.name);
+            }
 
         public bool Restart()
         {
