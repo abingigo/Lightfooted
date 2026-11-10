@@ -30,6 +30,7 @@ namespace Core
         private readonly Dictionary<string, int> levelDeaths = new();
         private Snapshot snapshot;
         private bool restoreOnLoad;
+        private bool continueRunOnLoad;
         private bool inLevel;
         private bool loading;
         private int resumeFrame;
@@ -180,6 +181,10 @@ namespace Core
                 return false;
 
             restoreOnLoad = restore && HasCheckpointFor(scenePath);
+            continueRunOnLoad = restoreOnLoad;
+
+            if (restore && State == GameState.GameOver)
+                continueRunOnLoad = true;
             if (!restoreOnLoad) SetSnapshot(null);
             StartCoroutine(Load(scenePath));
             return true;
@@ -208,7 +213,6 @@ namespace Core
         private IEnumerator Load(string scenePath)
         {
             loading = true;
-            if (!restoreOnLoad) AttemptSeconds = 0f;
             SetState(GameState.Loading);
             if (inLevel) EndLevel();
 
@@ -218,6 +222,7 @@ namespace Core
                 Debug.LogError($"GameManager: could not load '{scenePath}'.", this);
                 loading = false;
                 restoreOnLoad = false;
+                continueRunOnLoad = false;
                 StartLevel(SceneManager.GetActiveScene());
                 yield break;
             }
@@ -253,6 +258,13 @@ namespace Core
 
                 bool restoring = restoreOnLoad && HasCheckpointFor(scene.path);
                 restoreOnLoad = false;
+                if (!restoring)
+                    AttemptSeconds = 0f;
+
+                if (!continueRunOnLoad)
+                    levelDeaths.Remove(scene.name);
+
+                continueRunOnLoad = false;
                 if (!restoring) SetSnapshot(null);
 
                 LevelStarted?.Invoke(scene);

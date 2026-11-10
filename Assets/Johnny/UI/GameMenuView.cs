@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+ using Core;
 
 namespace LightPlatformer.UI
 {
@@ -52,7 +53,10 @@ namespace LightPlatformer.UI
             if (owner.State == MenuState.Playing) RenderHud();
             else if (owner.State == MenuState.LevelSelect) RenderLevelSelect(levelOverride ?? LevelCatalog.ReadBuildLevels());
             else if (owner.State == MenuState.Loading) RenderLoading();
-            else RenderPauseOrResult(owner.State);
+            else if (owner.State == MenuState.Victory)
+                RenderScoreboard(owner.VictoryScore);
+            else
+                RenderPauseOrResult(owner.State);
             Canvas.ForceUpdateCanvases();
             if (owner.State == MenuState.Playing) EventSystem.current?.SetSelectedGameObject(null);
             else FocusFirst();
@@ -171,7 +175,88 @@ namespace LightPlatformer.UI
                 break;
             }
         }
+        void RenderScoreboard(LevelScoreboard.Result score)
+        {
+            Fill(canvas, new Color(0.035f, 0.05f, 0.065f, 0.93f), "Modal backdrop");
+            var panel = Box(canvas, "Level scoreboard", 800, 500, 0, 0, Panel);
+            mainContent = panel.gameObject;
 
+            string path = SceneManager.GetActiveScene().path;
+            string title = LevelCatalog.Describe(path).Title;
+            Text(panel, "LIGHTFOOTED / " + title, 13, Accent, 0, 215, 728, 24);
+            Text(panel, "Level complete", 34, Color.white, 0, 175, 728, 50);
+
+            bool hasCoins = score.current.coinTotal > 0;
+            int columns = 3;
+            if (hasCoins) columns = 4;
+
+            float width = 728f / columns;
+            var stats = Box(panel, "This run", 728, 76, 0, 105, Background);
+
+            ScoreStat(stats, "YOUR TIME", score.current.TimeLabel(), width, 0);
+            ScoreStat(stats, "PERSONAL RANK", $"#{score.rank} of {score.totalRuns}", width, 1);
+            ScoreStat(stats, "DEATHS", score.current.deaths.ToString(), width, 2);
+            if (hasCoins)
+                ScoreStat(stats, "COINS", score.current.CoinLabel(), width, 3);
+
+            var table = Box(panel, "Personal best times", 456, 226, -136, -61, Background);
+            Text(table, "PERSONAL BEST TIMES", 13, Accent, 0, 92, 424, 22);
+            ScoreRow(table, 62, "Rank", "Time", "Deaths", "Coins", hasCoins, Muted, 13);
+
+            for (int i = 0; i < score.bestRuns.Count; i++)
+            {
+                var run = score.bestRuns[i];
+                int rank = i + 1;
+                string label = "#" + rank;
+                Color color = Color.white;
+
+                if (rank == score.rank)
+                {
+                    label += "  This run";
+                    color = Accent;
+                }
+
+                ScoreRow(table, 34 - i * 29, label, run.TimeLabel(),
+                    run.deaths.ToString(), run.CoinLabel(), hasCoins, color, 16);
+            }
+
+            var levels = LevelCatalog.ReadBuildLevels();
+            int index = levels.FindIndex(level => level.ScenePath == path);
+
+            if (index >= 0 && index + 1 < levels.Count)
+            {
+                Button(panel, "Next level", 240, 44, 244, 13, () => controller.NextLevel(), true);
+                Button(panel, "Restart level", 240, 44, 244, -40, () => controller.Restart());
+            }
+            else
+            {
+                Button(panel, "Play again", 240, 44, 244, -40, () => controller.Restart(), true);
+            }
+
+            Button(panel, "Level select", 240, 44, 244, -93, () => controller.GoToMenu());
+            Button(panel, "Controls", 240, 44, 244, -146, ToggleControls);
+
+            Text(panel, "Personal times are stored on this device.", 14, Muted, 0, -196, 728, 24);
+            errorText = Text(panel, "", 14, new Color32(255, 180, 168, 255), 0, -226, 728, 28);
+        }
+
+        static void ScoreStat(Transform parent, string label, string value, float width, int index)
+        {
+            float x = -364 + width * (index + 0.5f);
+            Text(parent, label, 12, Muted, x, 17, width - 32, 20);
+            Text(parent, value, 25, Color.white, x, -11, width - 32, 34);
+        }
+
+        static void ScoreRow(Transform parent, float y, string rank, string time,
+            string deaths, string coins, bool hasCoins, Color color, float size)
+        {
+            Text(parent, rank, size, color, -157, y, 110, 26);
+                Text(parent, time, size, color, -30, y, 132, 26);
+            Text(parent, deaths, size, color, 77, y, 70, 26);
+
+            if (hasCoins)
+                 Text(parent, coins, size, color, 173, y, 78, 26);
+        }
         void RenderPauseOrResult(MenuState state)
         {
             Fill(canvas, new Color(0.035f, 0.05f, 0.065f, 0.93f), "Modal backdrop");
