@@ -46,3 +46,9 @@ MonoBehaviour:
     title: Level 4
     description: Explore a new challenge of light and shadow.
     coinTotal: 1
+  - scene:
+      guid: 171c070ff3f309b4f8f4006674c6d79f
+      path: Assets/Scenes/Level dash.unity
+    title: Level 5
+    description: 
+    coinTotal: 0
