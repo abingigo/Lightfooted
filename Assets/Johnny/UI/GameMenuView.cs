@@ -79,7 +79,8 @@ namespace LightPlatformer.UI
             content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(0.5f, 1);
             content.sizeDelta = Vector2.zero;
             var layout = content.GetComponent<VerticalLayoutGroup>();
-            layout.spacing = 10; layout.padding = new RectOffset(4, 4, 4, 4);
+            const float levelRowHeight = 40;
+            layout.spacing = 6; layout.padding = new RectOffset(4, 4, 4, 4);
             layout.childControlWidth = true; layout.childControlHeight = true; layout.childForceExpandHeight = false;
             content.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             var scroll = scrollRoot.gameObject.AddComponent<ScrollRect>();
@@ -102,8 +103,8 @@ namespace LightPlatformer.UI
             for (int i = 0; i < levels.Count; i++)
             {
                 var entry = levels[i];
-                var button = Button(content, i.ToString("00") + "    " + entry.Title, 296, 60, 0, 0, () => SelectLevel(entry));
-                button.gameObject.AddComponent<LayoutElement>().preferredHeight = 60;
+                var button = Button(content, i.ToString("00") + "    " + entry.Title, 296, levelRowHeight, 0, 0, () => SelectLevel(entry));
+                button.gameObject.AddComponent<LayoutElement>().preferredHeight = levelRowHeight;
                 button.gameObject.AddComponent<MenuFocusScroll>().Scroll = scroll;
                 levelButtons.Add(button);
                 levelPaths.Add(entry.ScenePath);
