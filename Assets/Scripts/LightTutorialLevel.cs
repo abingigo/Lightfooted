@@ -156,7 +156,7 @@ public class LightTutorialLevel : MonoBehaviour
             return;
         }
 
-        const string throwHint = "Hold A or D. Press Q, then release it.\nHold Q longer to throw farther.";
+        const string throwHint = "Hold E and aim with the mouse.\nRelease E to throw.";
         const float throwHintTopMargin = 28f;
         float height = 72f;
         float topMargin = 100f;
@@ -182,7 +182,7 @@ public class LightTutorialLevel : MonoBehaviour
         }
         else if (!unlocked[1])
         {
-            instruction = throwHint + "\nPress Q alone to drop.";
+            instruction = throwHint + "\nHold S and press E to drop.";
             height = 96f;
             topMargin = throwHintTopMargin;
             hintPosition = steps[1].transform.position;

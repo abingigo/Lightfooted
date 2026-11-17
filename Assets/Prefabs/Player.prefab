@@ -665,10 +665,11 @@ MonoBehaviour:
   holdOffset: {x: 0.6, y: 0.3, z: 0}
   pickupRadius: 1.25
   pickupKey: 101
-  throwKey: 113
-  throwOffset: 1.3
-  throwImpulse: 6
-  upwardImpulse: 2
+  throwKey: 101
+  throwOffset: 1
+  minThrowImpulse: 3
+  maxThrowImpulse: 13
+  maxAimDistance: 7
   pickupDelay: 0.35
 --- !u!114 &7325150602004068245
 MonoBehaviour:

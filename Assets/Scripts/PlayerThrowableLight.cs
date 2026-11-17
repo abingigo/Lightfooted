@@ -3,41 +3,45 @@ using UnityEngine;
 
 public class PlayerThrowableLight : MonoBehaviour
 {
-    const float TapTime = 0.1f;
-
     [Header("Interaction")]
     [SerializeField] Transform holdPoint;
     [SerializeField] Vector3 holdOffset = new Vector3(0.6f, 0.3f, 0f);
     [SerializeField] float pickupRadius = 1.25f;
     [SerializeField] KeyCode pickupKey = KeyCode.E;
-    [SerializeField] KeyCode throwKey = KeyCode.Q;
+    [Tooltip("Hold to aim at the mouse, release to throw. Hold Down while pressing it to drop the light instead.")]
+    [SerializeField] KeyCode throwKey = KeyCode.E;
 
     [Header("Throw")]
-    [SerializeField] float throwOffset = 1.3f;
-    [SerializeField] float throwImpulse = 6f;
-    [SerializeField] float upwardImpulse = 2f;
+    [Tooltip("How far from the player, toward the aim, the light starts its flight.")]
+    [SerializeField] float throwOffset = 1f;
+    [Tooltip("Throw strength when aiming right next to the player.")]
+    [SerializeField, Min(0f)] float minThrowImpulse = 3f;
+    [Tooltip("Throw strength when aiming at Max Aim Distance or farther.")]
+    [SerializeField, Min(0f)] float maxThrowImpulse = 13f;
+    [Tooltip("Mouse distance from the player that gives full strength.")]
+    [SerializeField, Min(0.1f)] float maxAimDistance = 7f;
     [SerializeField] float pickupDelay = 0.35f;
-    [SerializeField, Min(0.01f)] float chargeTime = 0.75f;
-    [SerializeField, Min(1f)] float maxThrowMultiplier = 2f;
 
     ThrowableLight carriedLight;
     float facing = 1f;
-    float chargeDirection;
-    float chargeStartedAt;
+    bool aiming;
+    Vector2 aim = Vector2.right;
     readonly List<Vector2> throwPath = new List<Vector2>();
+
+    Vector2 ThrowOrigin => (Vector2)transform.position + new Vector2(0f, holdOffset.y);
 
     void Update()
     {
         if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
         {
-            chargeDirection = 0f;
+            aiming = false;
             return;
         }
         float horizontal = Input.GetAxisRaw("Horizontal");
         if (horizontal != 0f) facing = Mathf.Sign(horizontal);
         if (carriedLight == null)
         {
-            chargeDirection = 0f;
+            aiming = false;
             if (Input.GetKeyDown(pickupKey)) TryPickUp();
         }
         else
@@ -45,41 +49,48 @@ public class PlayerThrowableLight : MonoBehaviour
             if (holdPoint == null)
                 carriedLight.transform.position = transform.position + new Vector3(facing * holdOffset.x, holdOffset.y, holdOffset.z);
 
-            UpdateThrowInput(horizontal, Input.GetKeyDown(throwKey), Input.GetKeyUp(throwKey));
+            UpdateThrowInput(MouseAim(), Input.GetAxisRaw("Vertical") < 0f,
+                Input.GetKeyDown(throwKey), Input.GetKeyUp(throwKey));
         }
     }
 
-    void OnDisable() => chargeDirection = 0f;
+    void OnDisable() => aiming = false;
 
     void OnApplicationFocus(bool focused)
     {
-        if (!focused) chargeDirection = 0f;
+        if (!focused) aiming = false;
     }
 
-    void UpdateThrowInput(float horizontal, bool pressed, bool released)
+    Vector2 MouseAim()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return new Vector2(facing * maxAimDistance, 0f);
+        return (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - ThrowOrigin;
+    }
+
+    void UpdateThrowInput(Vector2 aimOffset, bool drop, bool pressed, bool released)
     {
         if (pressed)
         {
-            if (horizontal == 0f)
+            if (drop)
             {
                 carriedLight.Drop(pickupDelay);
                 carriedLight = null;
-                chargeDirection = 0f;
+                aiming = false;
                 return;
             }
 
-            chargeDirection = Mathf.Sign(horizontal);
-            chargeStartedAt = Time.time;
+            aiming = true;
         }
 
-        if (chargeDirection == 0f) return;
-        if (horizontal != 0f) chargeDirection = Mathf.Sign(horizontal);
+        if (!aiming) return;
+        aim = aimOffset;
         if (!released) return;
 
         GetThrow(out Vector2 position, out Vector2 impulse);
         carriedLight.Throw(position, impulse, pickupDelay);
         carriedLight = null;
-        chargeDirection = 0f;
+        aiming = false;
     }
 
     void TryPickUp()
@@ -109,10 +120,10 @@ public class PlayerThrowableLight : MonoBehaviour
 
     void GetThrow(out Vector2 position, out Vector2 impulse)
     {
-        float charge = Mathf.Clamp01((Time.time - chargeStartedAt - TapTime) / chargeTime);
-        float strength = Mathf.Lerp(1f, maxThrowMultiplier, charge);
-        position = (Vector2)transform.position + new Vector2(chargeDirection * throwOffset, holdOffset.y);
-        impulse = new Vector2(chargeDirection * throwImpulse * strength, upwardImpulse);
+        Vector2 direction = aim.sqrMagnitude > 0.0001f ? aim.normalized : new Vector2(facing, 0f);
+        float strength = Mathf.Lerp(minThrowImpulse, maxThrowImpulse, Mathf.Clamp01(aim.magnitude / maxAimDistance));
+        position = ThrowOrigin + direction * throwOffset;
+        impulse = direction * strength;
     }
 
     void OnGUI()
@@ -122,7 +133,7 @@ public class PlayerThrowableLight : MonoBehaviour
 
         Camera cam = Camera.main;
         if (cam == null) return;
-        if (chargeDirection != 0f && Time.time - chargeStartedAt >= TapTime && Event.current.type == EventType.Repaint)
+        if (aiming && Event.current.type == EventType.Repaint)
             DrawThrowPreview(cam);
 
         if (!carriedLight.IsOn) return;
@@ -169,4 +180,3 @@ public class PlayerThrowableLight : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
 }
-
