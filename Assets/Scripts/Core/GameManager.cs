@@ -36,7 +36,7 @@ namespace Core
         private int resumeFrame;
 
         public GameState State { get; private set; } = GameState.Loading;
-        public bool IsGameplayActive => State == GameState.Playing && Time.frameCount > resumeFrame;
+        public bool IsGameplayActive => State == GameState.Playing && Time.frameCount > resumeFrame && !GameplayHold.Active;
         public Scene CurrentLevel { get; private set; }
         public LevelList Levels => levels;
 
@@ -85,7 +85,7 @@ namespace Core
         {
             if (State != GameState.Playing) return;
             if (Time.timeScale == 0f) Pause();
-            else AttemptSeconds += Time.deltaTime;
+            else if (!GameplayHold.Active) AttemptSeconds += Time.deltaTime;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
