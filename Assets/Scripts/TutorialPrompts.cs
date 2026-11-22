@@ -106,6 +106,11 @@ public class TutorialPrompts : MonoBehaviour
 
     [SerializeField, Min(0.01f)] float ghostPathWidth = 0.1f;
 
+    [Tooltip("Marks where the ghost dashed, on its route line. Points right; flipped for dashes to the left. Empty = a drawn double chevron.")]
+    [SerializeField] Sprite dashIcon;
+
+    [Tooltip("Height of the dash icon in world units.")]
+    [SerializeField, Min(0.05f)] float dashIconSize = 0.6f;
 
     [Tooltip("Seconds the ghost stays at the end of its route, after it stops, before the player can move.")]
     [SerializeField, Min(0f)] float ghostEndPause = 0.6f;
@@ -132,6 +137,10 @@ public class TutorialPrompts : MonoBehaviour
     LineRenderer path;
     Prompt pathPrompt;
     readonly List<Vector3> pathPoints = new();
+    // Dash marks on the line: x, y and the dash direction (+1 right, -1 left) in z.
+    readonly List<Vector3> pathDashes = new();
+    readonly List<SpriteRenderer> dashIcons = new();
+    static Sprite drawnDashIcon;
 
     void Update()
     {
@@ -224,12 +233,14 @@ public class TutorialPrompts : MonoBehaviour
     // Their routes are kept, so after a retry the line still shows until the player completes it.
     static readonly HashSet<int> shownGhosts = new();
     static readonly Dictionary<int, Vector3[]> savedPaths = new();
+    static readonly Dictionary<int, Vector3[]> savedDashes = new();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()
     {
         shownGhosts.Clear();
         savedPaths.Clear();
+        savedDashes.Clear();
     }
 
     void MaybePlayGhost(Prompt prompt)
@@ -239,6 +250,7 @@ public class TutorialPrompts : MonoBehaviour
         {
             shownGhosts.Clear();
             savedPaths.Clear();
+            savedDashes.Clear();
         }
         if (prompt.ghostSteps.Length == 0 || demo != null) return;
         if (shownGhosts.Add(index))
@@ -252,6 +264,8 @@ public class TutorialPrompts : MonoBehaviour
             pathPoints.AddRange(points);
             path.positionCount = pathPoints.Count;
             path.SetPositions(pathPoints.ToArray());
+            if (savedDashes.TryGetValue(index, out var dashes))
+                foreach (var dash in dashes) AddDashIcon(dash);
         }
     }
 
@@ -283,6 +297,8 @@ public class TutorialPrompts : MonoBehaviour
         Color color = ghostColor;
         color.a *= 1f - pathPrompt.hide;
         path.startColor = path.endColor = color;
+        foreach (var icon in dashIcons)
+            if (icon != null) icon.color = IconColor(1f - pathPrompt.hide);
     }
 
     void StartPath(Prompt prompt)
@@ -314,6 +330,77 @@ public class TutorialPrompts : MonoBehaviour
         path = null;
         pathPrompt = null;
         pathPoints.Clear();
+        pathDashes.Clear();
+        dashIcons.Clear(); // children of the line, destroyed with it
+    }
+
+    // The icon is drawn fully opaque in the ghost's colour so it reads against the line.
+    Color IconColor(float fade)
+    {
+        Color color = ghostColor;
+        color.a = fade;
+        return color;
+    }
+
+    void AddDashIcon(Vector3 mark)
+    {
+        if (path == null) return;
+        pathDashes.Add(mark);
+
+        var sprite = dashIcon != null ? dashIcon : DrawnDashIcon();
+        var icon = new GameObject("Dash mark").AddComponent<SpriteRenderer>();
+        icon.transform.SetParent(path.transform, false);
+        icon.transform.position = new Vector3(mark.x, mark.y, 0f);
+        float height = Mathf.Max(sprite.bounds.size.y, 0.0001f);
+        icon.transform.localScale = Vector3.one * (dashIconSize / height);
+        icon.sprite = sprite;
+        icon.flipX = mark.z < 0f;
+        icon.sharedMaterial = path.sharedMaterial;
+        icon.sortingLayerID = path.sortingLayerID;
+        icon.sortingOrder = path.sortingOrder + 1;
+        icon.color = IconColor(1f);
+        dashIcons.Add(icon);
+    }
+
+    // A white double chevron (>>) pointing right, made once in code so no image asset is needed.
+    static Sprite DrawnDashIcon()
+    {
+        if (drawnDashIcon != null) return drawnDashIcon;
+        const int size = 64;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Bilinear,
+            wrapMode = TextureWrapMode.Clamp,
+            name = "Dash mark"
+        };
+        var pixels = new Color32[size * size];
+        const float thickness = 0.085f;
+        for (int py = 0; py < size; py++)
+        for (int px = 0; px < size; px++)
+        {
+            var p = new Vector2((px + 0.5f) / size, (py + 0.5f) / size);
+            float d = float.MaxValue;
+            foreach (float shift in new[] { 0f, 0.32f })
+            {
+                var tip = new Vector2(0.5f + shift, 0.5f);
+                d = Mathf.Min(d, DistanceToSegment(p, new Vector2(0.18f + shift, 0.16f), tip));
+                d = Mathf.Min(d, DistanceToSegment(p, new Vector2(0.18f + shift, 0.84f), tip));
+            }
+            float alpha = Mathf.Clamp01((thickness - d) * size * 0.5f + 0.5f);
+            pixels[py * size + px] = new Color32(255, 255, 255, (byte)(alpha * 255f));
+        }
+        texture.SetPixels32(pixels);
+        texture.Apply();
+        drawnDashIcon = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
+        drawnDashIcon.name = "Dash mark";
+        return drawnDashIcon;
+    }
+
+    static float DistanceToSegment(Vector2 p, Vector2 a, Vector2 b)
+    {
+        Vector2 ab = b - a;
+        float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / ab.sqrMagnitude);
+        return Vector2.Distance(p, a + ab * t);
     }
 
     IEnumerator PlayGhost(Prompt prompt, int index)
@@ -365,6 +452,12 @@ public class TutorialPrompts : MonoBehaviour
             var step = prompt.ghostSteps[index];
             bool begins = index != lastStep;
             lastStep = index;
+            if (step.dash && begins && ghostPath)
+            {
+                float direction = step.move != 0f ? Mathf.Sign(step.move) : 1f;
+                Vector3 at = ghost.transform.position;
+                AddDashIcon(new Vector3(at.x, at.y, direction));
+            }
             return new PlayerController.InputFrame
             {
                 horizontal = step.move,
@@ -389,7 +482,11 @@ public class TutorialPrompts : MonoBehaviour
         yield return new WaitForSeconds(ghostEndPause);
 
         UpdatePath();
-        if (pathPrompt == prompt && pathPoints.Count > 1) savedPaths[index] = pathPoints.ToArray();
+        if (pathPrompt == prompt && pathPoints.Count > 1)
+        {
+            savedPaths[index] = pathPoints.ToArray();
+            savedDashes[index] = pathDashes.ToArray();
+        }
         EndGhost();
     }
 
