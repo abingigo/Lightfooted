@@ -1477,7 +1477,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name=a> / <sprite name=d> to input direction
+  m_text: <sprite name=a> / <sprite name=d>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1614,7 +1614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name=space> to Jump
+  m_text: <sprite name=space>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1751,7 +1751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Input direction + <sprite name=shift> to dash
+  m_text: <sprite name=shift> while moving to dash
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -2891,12 +2891,14 @@ MonoBehaviour:
     endX: -10
     ghostStart: {x: -15.5, y: 0.8}
     ghostSteps: []
+    hidePath: 0
   - text: {fileID: 900100017}
     keys: 1
     startX: -10
     endX: -5
     ghostStart: {x: -10, y: 0.8}
     ghostSteps: []
+    hidePath: 0
   - text: {fileID: 900100021}
     keys: 2
     startX: -5
@@ -2919,6 +2921,7 @@ MonoBehaviour:
       move: 0
       jump: 0
       dash: 0
+    hidePath: 0
   - text: {fileID: 900100025}
     keys: 3
     startX: 5
@@ -2945,6 +2948,7 @@ MonoBehaviour:
       move: 0
       jump: 0
       dash: 0
+    hidePath: 0
   - text: {fileID: 900100029}
     keys: 4
     startX: 29
@@ -2963,6 +2967,7 @@ MonoBehaviour:
       move: 0
       jump: 0
       dash: 0
+    hidePath: 0
   dimmedAlpha: 0.4
   dimmedScale: 0.8
   fadeSeconds: 0.3
@@ -2974,6 +2979,8 @@ MonoBehaviour:
   ghostPath: 1
   ghostPathMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   ghostPathWidth: 0.1
+  dashIcon: {fileID: 0}
+  dashIconSize: 0.6
   ghostEndPause: 0.6
   ghostSettleLimit: 3
   ghostStartTolerance: 0.1
