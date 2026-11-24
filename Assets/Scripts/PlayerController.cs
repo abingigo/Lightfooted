@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
         filter.SetNormalAngle(supportAngle - 45f, supportAngle + 45f);
         return rb.GetContacts(filter, dashSupportContact) > 0;
     }
+    
     static InputFrame ReadKeyboard() => new InputFrame
     {
         horizontal = Input.GetAxisRaw("Horizontal"),
