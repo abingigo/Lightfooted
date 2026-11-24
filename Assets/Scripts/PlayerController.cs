@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public bool IsGrounded => isGrounded;
     public bool isDashing = false;
     bool isCoolDownReady = true;
+    readonly ContactPoint2D[] dashSupportContact = new ContactPoint2D[1];
     float moveX;
     float moveY;
     bool dashReady = true;
@@ -88,7 +89,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (isGrounded)
+        bool hasDashSupport = HasDashSupport();
+        if (hasDashSupport)
         {
             isCoolDownReady = true;
         }
@@ -107,13 +109,21 @@ public class PlayerController : MonoBehaviour
 
             Invoke(nameof(StopDash), dashDuration);
 
-            if (!isGrounded)
+            if (!hasDashSupport)
             {
                 isCoolDownReady = false;
             }
         }
     }
 
+    bool HasDashSupport()
+    {
+        var filter = new ContactFilter2D { useTriggers = false };
+        filter.SetLayerMask(groundMask);
+        float supportAngle = Physics2D.gravity.y * rb.gravityScale <= 0f ? 90f : 270f;
+        filter.SetNormalAngle(supportAngle - 45f, supportAngle + 45f);
+        return rb.GetContacts(filter, dashSupportContact) > 0;
+    }
     static InputFrame ReadKeyboard() => new InputFrame
     {
         horizontal = Input.GetAxisRaw("Horizontal"),
