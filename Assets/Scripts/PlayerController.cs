@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal"),
         jumpHeld = Input.GetButton("Jump"),
         jumpPressed = Input.GetButtonDown("Jump"),
-        dashHeld = Input.GetKey(KeyCode.LeftShift)
+        dashHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
     };
 
     void FixedUpdate()

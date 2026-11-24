@@ -1477,7 +1477,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A / D to input direction
+  m_text: <sprite name=a> / <sprite name=d> to input direction
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1496,7 +1496,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
+  m_spriteAsset: {fileID: 11400000, guid: fcc6342bc2fae5a4db1f0b8bf51723b3, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -1614,7 +1614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Space to Jump
+  m_text: <sprite name=space> to Jump
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1633,7 +1633,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
+  m_spriteAsset: {fileID: 11400000, guid: fcc6342bc2fae5a4db1f0b8bf51723b3, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -1751,7 +1751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Input direction + Left Shift to dash
+  m_text: Input direction + <sprite name=shift> to dash
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1770,7 +1770,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
+  m_spriteAsset: {fileID: 11400000, guid: fcc6342bc2fae5a4db1f0b8bf51723b3, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -2890,33 +2890,13 @@ MonoBehaviour:
     startX: -1000
     endX: -10
     ghostStart: {x: -15.5, y: 0.8}
-    ghostSteps:
-    - seconds: 1.2
-      move: 1
-      jump: 0
-      dash: 0
-    - seconds: 0.3
-      move: 0
-      jump: 0
-      dash: 0
+    ghostSteps: []
   - text: {fileID: 900100017}
     keys: 1
     startX: -10
     endX: -5
     ghostStart: {x: -10, y: 0.8}
-    ghostSteps:
-    - seconds: 0.5
-      move: 1
-      jump: 0
-      dash: 0
-    - seconds: 0.9
-      move: 1
-      jump: 1
-      dash: 0
-    - seconds: 0.3
-      move: 0
-      jump: 0
-      dash: 0
+    ghostSteps: []
   - text: {fileID: 900100021}
     keys: 2
     startX: -5

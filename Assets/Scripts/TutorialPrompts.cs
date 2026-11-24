@@ -60,6 +60,9 @@ public class TutorialPrompts : MonoBehaviour
         [Tooltip("Inputs the ghost plays when this prompt first appears. Empty = no ghost for this prompt.")]
         public GhostStep[] ghostSteps = { };
 
+        [Tooltip("Play the ghost without leaving its route line on screen.")]
+        public bool hidePath;
+
         [System.NonSerialized] public bool reached;
         [System.NonSerialized] public bool jumpPressed;
         [System.NonSerialized] public bool dashPressed;
@@ -193,7 +196,7 @@ public class TutorialPrompts : MonoBehaviour
     void CheckKeys(Prompt prompt)
     {
         if (Input.GetButtonDown("Jump")) prompt.jumpPressed = true;
-        if (Input.GetKeyDown(KeyCode.LeftShift)) prompt.dashPressed = true;
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) prompt.dashPressed = true;
 
         prompt.done |= prompt.keys switch
         {
@@ -258,7 +261,7 @@ public class TutorialPrompts : MonoBehaviour
             demo = StartCoroutine(PlayGhost(prompt, index));
             return;
         }
-        if (ghostPath && savedPaths.TryGetValue(index, out var points))
+        if (ghostPath && !prompt.hidePath && savedPaths.TryGetValue(index, out var points))
         {
             StartPath(prompt);
             pathPoints.AddRange(points);
@@ -415,7 +418,7 @@ public class TutorialPrompts : MonoBehaviour
         // The ghost appears on the player and runs from there. It heads for the point the route was
         // timed from and goes straight into the steps when it gets there, without stopping.
         ghost = MakeGhost(player.position);
-        if (ghostPath) StartPath(prompt);
+        if (ghostPath && !prompt.hidePath) StartPath(prompt);
         var controller = ghost.GetComponent<PlayerController>();
         float total = prompt.ghostSteps.Sum(step => step.seconds);
         float start = float.PositiveInfinity;
@@ -452,7 +455,7 @@ public class TutorialPrompts : MonoBehaviour
             var step = prompt.ghostSteps[index];
             bool begins = index != lastStep;
             lastStep = index;
-            if (step.dash && begins && ghostPath)
+            if (step.dash && begins && ghostPath && !prompt.hidePath)
             {
                 float direction = step.move != 0f ? Mathf.Sign(step.move) : 1f;
                 Vector3 at = ghost.transform.position;
