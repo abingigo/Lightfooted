@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Economy.CurrencyCollectDef
   prefabOverride: {fileID: 0}
   sprite: {fileID: 0}
+  tint: {r: 0.3, g: 0.85, b: 0.35, a: 1}
   pickupMessage: Key found!
   currency: {fileID: 11400000, guid: 30b6029d8f7c4ffaac00a552285e0410, type: 2}
   amount: 1

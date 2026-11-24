@@ -15,6 +15,8 @@ namespace Collectables
         [SerializeField] private UnityEvent onCollected = new();
         
         private Sprite defaultSprite;
+        private SpriteRenderer[] tinted;
+        private Color[] baseColors;
         private bool collected;
         
         public CollectDefinition Definition => definition;
@@ -35,6 +37,13 @@ namespace Collectables
         }
         private void ApplyVisuals()
         {
+            if (tinted == null)
+            {
+                tinted = GetComponentsInChildren<SpriteRenderer>(true);
+                baseColors = System.Array.ConvertAll(tinted, r => r.color);
+            }
+            var tint = definition != null ? definition.Tint : Color.white;
+            for (int i = 0; i < tinted.Length; i++) tinted[i].color = baseColors[i] * tint;
             if (spriteRenderer == null) return;
             var sprite = definition != null ? definition.Sprite : null;
             spriteRenderer.sprite = sprite != null ? sprite : defaultSprite;
