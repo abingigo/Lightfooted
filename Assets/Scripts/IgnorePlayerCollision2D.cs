@@ -15,7 +15,7 @@ public class IgnorePlayerCollision2D : MonoBehaviour
     void Start()
     {
         PlayerController player = FindFirstObjectByType<PlayerController>();
-        if (player != null) playerColliders = player.GetComponents<Collider2D>();
+        if (player != null) playerColliders = player.GetComponentsInChildren<Collider2D>(true);
         Apply();
     }
 
