@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public bool IsGrounded => isGrounded;
     public bool isDashing = false;
     bool isCoolDownReady = true;
+    readonly ContactPoint2D[] dashSupportContact = new ContactPoint2D[1];
     float moveX;
     float moveY;
     bool dashReady = true;
@@ -34,6 +35,19 @@ public class PlayerController : MonoBehaviour
 
     PlayerLightTracker playerLightTracker;
 
+    /// One frame of controls.
+    public struct InputFrame
+    {
+        public float horizontal;
+        public bool jumpHeld;
+        public bool jumpPressed;
+        public bool dashHeld;
+    }
+
+    /// When set, the controller follows this instead of the keyboard and keeps moving during
+    /// gameplay holds. Called once per frame. The tutorial's ghost demo uses it.
+    public System.Func<InputFrame> scriptedInput;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -42,28 +56,30 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
+        if (scriptedInput == null && LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
         {
             ClearQueuedInput();
             return;
         }
+        InputFrame input = scriptedInput != null ? scriptedInput() : ReadKeyboard();
+
         isGrounded = groundCheckSize.x > 0f && groundCheckSize.y > 0f
             ? Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundMask)
             : Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundMask);
 
-        moveX = Input.GetAxisRaw("Horizontal");
+        moveX = input.horizontal;
         moveY = 0;
-        if (Input.GetButton("Jump"))
+        if (input.jumpHeld)
         {
             moveY = 1;
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded && !isDashing)
+        if (input.jumpPressed && isGrounded && !isDashing)
         {
             jumpQueued = true;
         }
 
-        if (!Input.GetKey(KeyCode.LeftShift))
+        if (!input.dashHeld)
         {
             dashReady = true;
         }
@@ -73,12 +89,13 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (isGrounded)
+        bool hasDashSupport = HasDashSupport();
+        if (hasDashSupport)
         {
             isCoolDownReady = true;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && (moveX != 0 || moveY != 0) && dashReady && isCoolDownReady)
+        if (input.dashHeld && (moveX != 0 || moveY != 0) && dashReady && isCoolDownReady)
         {
             dashReady = false;
             isDashing = true;
@@ -92,16 +109,32 @@ public class PlayerController : MonoBehaviour
 
             Invoke(nameof(StopDash), dashDuration);
 
-            if (!isGrounded)
+            if (!hasDashSupport)
             {
                 isCoolDownReady = false;
             }
         }
     }
 
+    bool HasDashSupport()
+    {
+        var filter = new ContactFilter2D { useTriggers = false };
+        filter.SetLayerMask(groundMask);
+        float supportAngle = Physics2D.gravity.y * rb.gravityScale <= 0f ? 90f : 270f;
+        filter.SetNormalAngle(supportAngle - 45f, supportAngle + 45f);
+        return rb.GetContacts(filter, dashSupportContact) > 0;
+    }
+    static InputFrame ReadKeyboard() => new InputFrame
+    {
+        horizontal = Input.GetAxisRaw("Horizontal"),
+        jumpHeld = Input.GetButton("Jump"),
+        jumpPressed = Input.GetButtonDown("Jump"),
+        dashHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
+    };
+
     void FixedUpdate()
     {
-        if (LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
+        if (scriptedInput == null && LightPlatformer.UI.GameMenuController.GameplayInputBlocked)
         {
             ClearQueuedInput();
             return;
@@ -152,7 +185,7 @@ public class PlayerController : MonoBehaviour
     private void StopDash()
     {
         isDashing = false;
-        playerLightTracker.UpdateCollision();
+        if (playerLightTracker != null) playerLightTracker.UpdateCollision();
     }
 
     private void ResetCooldown()
